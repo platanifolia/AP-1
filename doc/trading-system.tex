@@ -1,0 +1,158 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[fontset=none]{ctex}  % 中文支持
+\usepackage{graphicx}  % 插入图片的宏包
+\usepackage{float}  % 设置图片浮动位置的宏包
+
+\usetheme{metropolis}  %设置主题
+
+\setCJKmainfont[Path=fonts/]{LXGWWenKaiMono-Light.ttf}
+\setCJKsansfont[Path=fonts/]{LXGWWenKaiMono-Light.ttf}
+\setCJKmonofont[Path=fonts/]{LXGWWenKaiMono-Light.ttf}
+
+\title{高级程序设计}
+\subtitle{纪念品交易平台}
+\date{\today}
+\author{罗昊}
+\institute{计算机科学与技术系 191220073}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{目录}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{概述}
+
+\begin{frame}{总体设计思路}
+    此次设计的纪念品交易平台项目设计要求中已经明言需要使用多模块编程以及面向对象编程，
+    是以在设计交易平台时，需要剖分交易平台而成各个相对独立的模块。\\
+    现划分模块如下：\\
+    \begin{itemize}
+        \item 用户交互模块
+        \item 用户操作模块
+        \item 数据管理模块
+        \item 简易计算器模块
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{类图展示}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.87\textwidth]{img/tradingsystem.jpg}
+        \caption{整体类图}
+        \label{UmlClass}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{模块设计思考}
+    如前文图 \ref{UmlClass} 所示，该交易平台实现总共要实现六个模块。
+    前文提及的用户操作模块包含有管理员、卖家、买家三个角色。
+    以下将具体地讲述如何实现这些模块。\\
+    但就目前而言，这些模块的设计还不够完善，还需要进一步的设计。
+    譬如，管理员、卖家、买家三个角色可以继续抽象为一用户以提高代码复用程度。
+    但是否如此，还需在实践中进一步检测。\\
+\end{frame}
+
+\section{用户交互模块}
+
+\begin{frame}{交互模块展示}
+    \begin{figure}[HTB]
+        \begin{minipage}{0.6\textwidth}
+            如图 \ref{UserInterface} 所示，该模块内有管理员用户名、密码数据，并设置为不可访问。
+            此外，该模块中有用户状态字，用于区别目前用户登陆状态。
+            初始化为0，表示未登陆。1为管理员，2为卖家，3为买家。
+            其下为五个方法(不计首个预留接口)，将在下面展示。
+        \end{minipage}
+        % \hfill
+        \begin{minipage}{0.3\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{img/userinterface.png}
+            \caption{用户交互模块}
+            \label{UserInterface}
+        \end{minipage}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{交互模块方法}
+    UserRegister()方法首先校验用户状态字，正确则向模块内datasystem\_对象调用ProcessSql()方法，传递特殊修改指令。\\
+    PersonalInfoManager()方法实际包括查看、修改个人信息与充值功能，具体实现仍是调用ProcessSql()方法，传递查看、修改指令即可。
+    计算金额，则需要生成计算器对象并提供基础计算表达式，调用计算器模块两个处理方法。\\
+    剩余三个CALL方法，则是在调用ProcessSql()方法传递查询指令后，若成功即调用相应的CALL指令。
+    如此则可以进入对应的角色模块。\\
+\end{frame}
+
+\section{用户操作模块}
+
+\begin{frame}{各用户类型模块}
+    实质工作是根据需求生成相对应的SQL语句，并调用ProcessSql()方法，传递给datasystem\_对象。\\
+    因为这些用户实例一般运行在交互界面实例方法之中，可以访问交互界面实例内公开的数据管理模块实例。\\
+    然而需要思考的是用户状态字信息传递。
+    目前设计中，用户状态字存在于交互实例与数据管理实例之间，需要考虑同步问题。
+    需要提供一个方法，将用户状态字传递给数据管理模块。
+    但未免显得数据冗余，后续可能会对此进行修改。\\
+\end{frame}
+
+\begin{frame}{用户操作备忘}
+    各成员如何获取自身信息？
+    需要组合成SQL传递给ProcessSql()方法\\
+    若从交互界面传入，如何保证数据独立并良好同步？\\
+    操作错误码如何分配并传递？\\
+\end{frame}
+
+\section{数据管理模块}
+
+\begin{frame}{数据管理模块核心数据成员}
+    核心数据成员包括如下:\\
+    \begin{itemize}
+        \item userstatus\_：用户状态字，用于区别目前用户登陆状态
+        \item user\_：用户信息读取
+        \item item\_：商品信息读取
+        \item order\_：订单信息读取
+    \end{itemize}
+    其中后三者全部采用STL库中map类型，其中key键为各自信息编号，其余信息统一组织成相应结构体进行储存。\\
+    猜想编号很可能具有一定顺序性质，是以不使用unordered\_map的方式进行储存。
+    但具体实现如何还需实践。\\
+\end{frame}
+
+\begin{frame}{数据管理模块方法}
+    首先为三个Init类型函数，其意义为读取具体文件，并将其内容储存在相应的数据成员中。\\
+    所以该三种方法会在数据管理模块初始化为实例时调用。
+    同样地，在文件被改变时也需要调用该三种方法以更新数据成员。\\
+    Logging()方法用于记录操作日志并记录至文件之中。目前没有读取记录文件的需求。\\
+    剩余三个不可见方法则是具体的对文件进行查询、修改、删除操作指令。
+    目前接收参数我留空，是为了方便匹配最重要的ProcessSql()方法。
+    该方法将在下节中详细介绍。\\
+\end{frame}
+
+\begin{frame}{数据管理模块SQL处理方法}
+    这可能是本项目中最为繁杂的一部分。该方法接收简易的SQL语句字符串，并将其转换为相应的操作指令，
+    即调用上文提及的View()、Modify()、Delete()方法。\\
+    显然，需要解析SQL字符串并提供目标、表名、操作类型等信息。\\
+    目前对于这些这一模块的实现细节仍在思索。
+    但可以肯定的是，项目实现中只允许数据管理模块访问文件，不允许其他模块访问文件。\\
+    实质上将该模块视作简易数据库即可，可以参考其余数据库实现？
+\end{frame}
+
+\section{简易计算器模块}
+
+\begin{frame}{四则运算计算器实现}
+    该模块是本次项目中独立性最高之部分，只需要接收运算表达式字符串，返回答案或错误码即可。\\
+    可以维护两个栈，一个用于存储数字，一个用于存储运算符。
+    转为逆波兰表达式，并计算结果。\\
+    这部分内容在演示文稿中已有展现。\\
+    或是可以选择使用递归下降方法进行表达式求值，以下为相应文法:\\
+    \begin{itemize}
+        \item exp -> exp op1 exp | term
+        \item op1 -> + | -
+        \item term -> term op2 factor | factor
+        \item op2 -> * | /
+        \item factor -> (exp) | number
+    \end{itemize}
+    后续补充小数与负号即可，当然，这种方法可能在表达式过长时使用过多栈空间产生问题。\\
+\end{frame}
+
+\end{document}
