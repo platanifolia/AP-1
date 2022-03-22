@@ -57,6 +57,17 @@
     但是否如此，还需在实践中进一步检测。\\
 \end{frame}
 
+\begin{frame}{模块设计补充 3.18}
+    在实践中，发现有如下问题。\\
+    \begin{itemize}
+        \item 管理员、卖家、买家三个角色模块可以考虑抽象自用户这一抽象基类。因为该三者有较多相似功能。
+        \item 如上，若考虑使三者继承同一抽象基类，则需要使数据管理模块有较好地多状态处理机制。
+              否则以上三者仍需调用不同数据模块方法，如此则使得抽象几无意义，接口复杂程度仍未减少。
+        \item 假使不将该三者视作用户基类，可以调用数据管理模块的基础方法，但无疑会使得数据管理模块的抽象程度降低。
+        \item 后续可能还需要慎重考虑修改。
+    \end{itemize}
+\end{frame}
+
 \section{用户交互模块}
 
 \begin{frame}{交互模块展示}
@@ -118,6 +129,15 @@
     但具体实现如何还需实践。\\
 \end{frame}
 
+\begin{frame}{数据管理模块初步实现}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.87\textheight]{img/database3.18.png}
+        \caption{数据管理模块初步实现}
+        \label{database3.18}
+    \end{figure}
+\end{frame}
+
 \begin{frame}{数据管理模块方法}
     首先为三个Init类型函数，其意义为读取具体文件，并将其内容储存在相应的数据成员中。\\
     所以该三种方法会在数据管理模块初始化为实例时调用。
@@ -153,6 +173,42 @@
         \item factor -> (exp) | number
     \end{itemize}
     后续补充小数与负号即可，当然，这种方法可能在表达式过长时使用过多栈空间产生问题。\\
+\end{frame}
+
+\begin{frame}{实践中梯度下降调用依据}
+    expression:
+    \begin{itemize}
+        \item expression + term
+        \item expression − term
+        \item term
+    \end{itemize}
+
+    term:
+    \begin{itemize}
+        \item term / primary
+        \item term ∗ primary
+        \item primary
+    \end{itemize}
+        
+    primary:   
+    \begin {itemize}
+        \item number
+        \item − primar
+        \item ( expression )
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{实践具体函数}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.3\textheight]{img/cal3.18.png}
+        \caption{cal}
+        \label{cal3.18}
+    \end{figure}
+    其中Calculate函数作总体调用，TokenGet函数遍历字符串而后返回类型。
+    其余依照上文所示层次依次下降调用，没有循环调用。\\
+    似乎性能不是很良好，但足够应用于该项目。
+    后续会进行优化。\\
 \end{frame}
 
 \end{document}
