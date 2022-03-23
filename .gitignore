@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# vscode settings
+.vscode
+
+# cmake cache
+build
