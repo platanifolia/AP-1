@@ -43,6 +43,7 @@ private:
     std::map<std::string, UserInfo> user_;
     std::map<std::string, ItemInfo> item_;
     std::map<std::string, OrderInfo> order_;
+    // std::string currentuser_;
 
 public:
     SimpleDataBase();
@@ -57,12 +58,20 @@ public:
     bool SaveOrder(const std::string &filename);
 
     // print is debug tool, delete it later
-    bool print(std::string tablename);
+    // bool print(std::string tablename);
     bool LogFile(std::string sql);
 
     void InsertUser(const std::string &insertdata);
     void InsertItem(const std::string &insertdata);
     void InsertOrder(const std::string &insertdata);
+
+    void SelectUser(const std::string &column = "", const std::string &condition = "");
+    void SelectItem(const std::string &column = "", const std::string &condition = "");
+    void SelectOrder(const std::string &column = "", const std::string &condition = "");
+
+    bool UpdateUser(const std::string &updatedata, const std::string &condition = "");
+    bool UpdateItem(const std::string &updatedata, const std::string &condition = "");
+    bool UpdateOrder(const std::string &updatedata, const std::string &condition = "");
 
     int ParseSql(const std::string &sql);
 };

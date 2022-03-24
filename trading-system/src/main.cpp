@@ -11,6 +11,7 @@
 int main()
 {
 	SimpleDataBase sdb;
+	sdb.ParseSql("SELECT * FROM commodity WHERE sellerID CONTAINS U001");
 	// InterFace test;
 	// test.FirstView();
 	// std::cout << "Hello World!" << std::endl;
@@ -21,6 +22,6 @@ int main()
 	// {
 	// 	std::cout << i << std::endl;
 	// }
-	sdb.print("user");
+	// sdb.print("user");
 	return 0;
 }
