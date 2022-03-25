@@ -36,7 +36,6 @@ void InterFace::FirstView()
         {
             if(AdminVerification())
             {
-                cout << "管理员登录成功！" << endl;
                 UserAdmin admin(sdb_);
                 admin.AdminView();
             }
