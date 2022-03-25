@@ -4,12 +4,6 @@ project(tradingsystem LANGUAGES CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# list(APPEND flags "-fPIC" "-Wall" "-static")
-# message("C++ compiler flags: ${CMAKE_CXX_FLAGS}")
-# if(NOT WIN32)
-#   list(APPEND flags "-Wextra" "-Wpedantic")
-# endif()
-
 if(MINGW)
     set(CMAKE_EXE_LINKER_FLAGS "-static")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
