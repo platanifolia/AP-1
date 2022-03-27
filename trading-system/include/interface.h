@@ -21,6 +21,7 @@ public:
     void FirstView();
     
     bool AdminVerification();
+    bool UserVerification(const std::string &username, const std::string &password);
 
 };
 

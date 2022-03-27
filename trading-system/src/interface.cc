@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "useradmin.h"
+#include "usergengral.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ void InterFace::FirstView()
     while (true)
     {
         cout << string(67, '=') << endl;
-        cout << "1.管理员登录   2.用户注册  3.用户登录  4.退出系统" << endl;
+        cout << "1.管理员登录  2.用户注册  3.用户登录  4.退出系统" << endl;
         cout << string(67, '=') << endl;
         cout << endl;
         cout << "请输入您的选择：";
@@ -34,7 +35,7 @@ void InterFace::FirstView()
         {
         case 1:
         {
-            if(AdminVerification())
+            if (AdminVerification())
             {
                 UserAdmin admin(sdb_);
                 admin.AdminView();
@@ -45,10 +46,27 @@ void InterFace::FirstView()
             // UserRegister();
             break;
         case 3:
-            // UserLogin();
+        {
+            string username;
+            string password;
+            cout << "请输入您的用户名：";
+            cin >> username;
+            cout << "请输入您的密码：";
+            cin >> password;
+            if (UserVerification(username, password))
+            {
+                string userid = sdb_->FindUserid(username);
+                // if(userid == "")
+                // {
+                //     cerr << "用户不存在！" << endl;
+                //     break;
+                // }
+                UserGeneral user(sdb_, sdb_->FindUserid(username));
+                user.UserGeneralView();
+            }
             break;
+        }
         case 4:
-            // exit(0);
             return;
         default:
             cout << "似乎输入错误指令?请检查" << endl;
@@ -75,4 +93,9 @@ bool InterFace::AdminVerification()
         cout << "管理员登录失败！将返回主界面" << endl;
         return false;
     }
+}
+
+bool InterFace::UserVerification(const std::string &username, const std::string &password)
+{
+    return sdb_->UserVerification(username, password);
 }

@@ -57,10 +57,6 @@ public:
     bool SaveItem(const std::string &filename);
     bool SaveOrder(const std::string &filename);
 
-    // print is debug tool, delete it later
-    // bool print(std::string tablename);
-    bool LogFile(std::string sql);
-
     void InsertUser(const std::string &insertdata);
     void InsertItem(const std::string &insertdata);
     void InsertOrder(const std::string &insertdata);
@@ -74,6 +70,16 @@ public:
     bool UpdateOrder(const std::string &updatedata, const std::string &condition = "");
 
     int ParseSql(const std::string &sql);
+
+    bool LogFile(std::string sql);
+
+    bool UsernameExist(const std::string &username);
+    std::string FindUserid(const std::string &username);
+    bool UserVerification(const std::string &username, const std::string &password);
+    std::string GetNewUserid();
+    std::string GetNewItemid();
+    std::string GetNewOrderid();
+    std::string GetItemOwner(const std::string &itemid);
 };
 
 #endif // SIMPLEDATABASE_H_

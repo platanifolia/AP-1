@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <time.h>
+// #include <time.h>
 #include <filesystem>
 
 #include "strhandle.h"
@@ -18,6 +18,7 @@ using std::istringstream;
 using std::map;
 using std::ofstream;
 using std::string;
+using std::to_string;
 using std::vector;
 using namespace std::filesystem;
 
@@ -34,7 +35,6 @@ bool SimpleDataBase::LoadUser(const string &filename)
     ifstream userfile(filename);
     if (!userfile)
     {
-        // userfile.close();
         ofstream userfile(filename);
         if (userfile)
             userfile << "userID,username,password,phoneNumber,address,balance,userState";
@@ -45,37 +45,6 @@ bool SimpleDataBase::LoadUser(const string &filename)
     getline(userfile, line);
     while (getline(userfile, line))
     {
-        // string userid0, username1, password2, phonenumber3, address4, userstate6;
-        // double balance5;
-        // size_t pos = line.find(',');
-        // userid0 = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // username1 = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // password2 = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // phonenumber3 = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // address4 = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // balance5 = stod(line.substr(0, pos));
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // userstate6 = line.substr(0, pos);
-
-        // UserInfo userinfo;
-        // userinfo.username = username1;
-        // userinfo.password = password2;
-        // userinfo.telephone = phonenumber3;
-        // userinfo.address = address4;
-        // userinfo.balance = balance5;
-        // userinfo.userstate = userstate6;
-
         vector<string> datatoken;
         StringSplit(line, datatoken, ",");
         UserInfo userinfotemp{datatoken[1], datatoken[2], datatoken[3], datatoken[4], stod(datatoken[5]), datatoken[6]};
@@ -90,7 +59,6 @@ bool SimpleDataBase::LoadItem(const string &filename)
     ifstream itemfile(filename);
     if (!itemfile)
     {
-        // itemfile.close();
         ofstream itemfile(filename);
         if (itemfile)
             itemfile << "commodityID,commodityName,price,number,description,sellerID,addedDate,state";
@@ -101,43 +69,6 @@ bool SimpleDataBase::LoadItem(const string &filename)
     getline(itemfile, line);
     while (getline(itemfile, line))
     {
-        // string itemid, itemname, description, sellerid, addeddate, state;
-        // double price;
-        // int number;
-        // size_t pos = line.find(',');
-        // itemid = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // itemname = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // price = stod(line.substr(0, pos));
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // number = stoi(line.substr(0, pos));
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // description = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // sellerid = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // addeddate = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // state = line.substr(0, pos);
-
-        // ItemInfo iteminfo;
-        // iteminfo.itemname = itemname;
-        // iteminfo.price = price;
-        // iteminfo.number = number;
-        // iteminfo.description = description;
-        // iteminfo.sellerid = sellerid;
-        // iteminfo.addeddate = addeddate;
-        // iteminfo.state = state;
-        // item_[itemid] = iteminfo;
-
         vector<string> datatoken;
         StringSplit(line, datatoken, ",");
         ItemInfo iteminfotemp{datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6], datatoken[7]};
@@ -152,7 +83,6 @@ bool SimpleDataBase::LoadOrder(const string &filename)
     ifstream orderfile(filename);
     if (!orderfile)
     {
-        // orderfile.close();
         ofstream orderfile(filename);
         if (orderfile)
             orderfile << "orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
@@ -163,39 +93,6 @@ bool SimpleDataBase::LoadOrder(const string &filename)
     getline(orderfile, line);
     while (getline(orderfile, line))
     {
-        // string orderid, itemid, date, sellerid, buyerid;
-        // double unitprice;
-        // int number;
-        // size_t pos = line.find(',');
-        // orderid = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // itemid = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // unitprice = stod(line.substr(0, pos));
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // number = stoi(line.substr(0, pos));
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // date = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // sellerid = line.substr(0, pos);
-        // line = line.substr(pos + 1);
-        // pos = line.find(',');
-        // buyerid = line.substr(0, pos);
-
-        // OrderInfo orderinfo;
-        // orderinfo.itemid = itemid;
-        // orderinfo.unitprice = unitprice;
-        // orderinfo.number = number;
-        // orderinfo.date = date;
-        // orderinfo.sellerid = sellerid;
-        // orderinfo.buyerid = buyerid;
-        // order_[orderid] = orderinfo;
-
         vector<string> datatoken;
         StringSplit(line, datatoken, ",");
         OrderInfo orderinfotemp{datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6]};
@@ -264,55 +161,8 @@ bool SimpleDataBase::SaveOrder(const string &filename)
     return true;
 }
 
-bool SimpleDataBase::LogFile(string sql)
-{
-    ofstream logfile("./commands.txt", ios::app);
-    if (!logfile)
-    {
-        logfile.close();
-        return false;
-    }
-
-    struct tm stime;
-    time_t now = time(0);
-    localtime_s(&stime, &now);
-
-    char tmp[32] = {0};
-    strftime(tmp, sizeof(tmp), "%Y-%m-%d %H:%M:%S", &stime);
-    string date(tmp);
-
-    logfile << endl
-            << date << ": " << sql;
-    logfile.close();
-    return true;
-}
-
 void SimpleDataBase::InsertUser(const string &insertdata)
 {
-    // string temp = insertdata.substr(1, insertdata.length() - 2);
-    // string tempid;
-    // UserInfo tempinfo;
-    // size_t pos = temp.find(',');
-    // tempid = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.username = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.password = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.telephone = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.address = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.balance = stod(temp.substr(0, pos));
-    // temp = temp.substr(pos + 1);
-    // tempinfo.userstate = temp;
-    // user_[tempid] = tempinfo;
-
     string strtemp = insertdata;
     strtemp.erase(strtemp.begin());
     strtemp.pop_back();
@@ -330,33 +180,6 @@ void SimpleDataBase::InsertUser(const string &insertdata)
 
 void SimpleDataBase::InsertItem(const string &insertdata)
 {
-    // string temp = insertdata.substr(1, insertdata.length() - 2);
-    // string tempid;
-    // ItemInfo tempinfo;
-    // size_t pos = temp.find(',');
-    // tempid = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.itemname = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.price = stod(temp.substr(0, pos));
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.number = stoi(temp.substr(0, pos));
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.description = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.sellerid = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.addeddate = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // tempinfo.state = temp;
-    // item_[tempid] = tempinfo;
-
     string strtemp = insertdata;
     strtemp.erase(strtemp.begin());
     strtemp.pop_back();
@@ -374,30 +197,6 @@ void SimpleDataBase::InsertItem(const string &insertdata)
 
 void SimpleDataBase::InsertOrder(const string &insertdata)
 {
-    // string temp = insertdata.substr(1, insertdata.length() - 2);
-    // string tempid;
-    // OrderInfo tempinfo;
-    // size_t pos = temp.find(',');
-    // tempid = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.itemid = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.unitprice = stod(temp.substr(0, pos));
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.number = stoi(temp.substr(0, pos));
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.date = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // pos = temp.find(',');
-    // tempinfo.sellerid = temp.substr(0, pos);
-    // temp = temp.substr(pos + 1);
-    // tempinfo.buyerid = temp;
-    // order_[tempid] = tempinfo;
-
     string strtemp = insertdata;
     strtemp.erase(strtemp.begin());
     strtemp.pop_back();
@@ -427,26 +226,40 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
     }
     else if (column == "userID")
     {
-        for (auto &i : user_)
+        // for (auto &i : user_)
+        // {
+        //     if (i.first.find(condition) != string::npos)
+        //     {
+        //         cout << i.first << " " << i.second.username << " " << i.second.password << " "
+        //              << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
+        //              << i.second.userstate << endl;
+        //     }
+        // }
+        // return;
+        if (user_.find(condition) != user_.end())
         {
-            if (i.first.find(condition) != string::npos)
-            {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
-            }
+            cout << condition
+                 << user_[condition].username << " " << user_[condition].password << " "
+                 << user_[condition].telephone << " " << user_[condition].address << " "
+                 << user_[condition].balance << " " << user_[condition].userstate << endl;
+            return;
         }
-        return;
+        else
+        {
+            cerr << "No such user!" << endl;
+            return;
+        }
     }
     else if (column == "username")
     {
         for (auto &i : user_)
         {
-            if (i.second.username.find(condition) != string::npos)
+            if (i.second.username == condition)
             {
                 cout << i.first << " " << i.second.username << " " << i.second.password << " "
                      << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
                      << i.second.userstate << endl;
+                return;
             }
         }
         return;
@@ -507,7 +320,7 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
     {
         for (auto &i : user_)
         {
-            if (i.second.userstate.find(condition) != string::npos)
+            if (i.second.userstate == condition)
             {
                 cout << i.first << " " << i.second.username << " " << i.second.password << " "
                      << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
@@ -541,19 +354,33 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
     }
     else if (column == "commodityID")
     {
-        for (auto &i : item_)
+        // for (auto &i : item_)
+        // {
+        //     if (i.first == condition)
+        //     {
+        //         selectnum += 1;
+        //         cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
+        //              << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
+        //              << i.second.addeddate << " " << i.second.state << endl;
+        //     }
+        // }
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
+        // return;
+        if (item_.find(condition) != item_.end())
         {
-            if (i.first.find(condition) != string::npos)
-            {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
-            }
+            cout << condition
+                 << item_[condition].itemname << " " << item_[condition].price << " "
+                 << item_[condition].number << " " << item_[condition].description << " "
+                 << item_[condition].sellerid << " " << item_[condition].addeddate << " "
+                 << item_[condition].state << endl;
+            return;
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
-        return;
+        else
+        {
+            cerr << "No such item!" << endl;
+            return;
+        }
     }
     else if (column == "commodityName")
     {
@@ -623,7 +450,7 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
     {
         for (auto &i : item_)
         {
-            if (i.second.sellerid.find(condition) != string::npos)
+            if (i.second.sellerid == condition)
             {
                 selectnum += 1;
                 cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
@@ -655,7 +482,7 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
     {
         for (auto &i : item_)
         {
-            if (i.second.state.find(condition) != string::npos)
+            if (i.second.state == condition)
             {
                 selectnum += 1;
                 cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
@@ -688,22 +515,35 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
     }
     else if (column == "orderID")
     {
-        for (auto &i : order_)
+        // for (auto &i : order_)
+        // {
+        //     if (i.first.find(condition) != string::npos)
+        //     {
+        //         cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
+        //              << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
+        //              << i.second.buyerid << endl;
+        //     }
+        // }
+        // return;
+        if (order_.find(condition) != order_.end())
         {
-            if (i.first.find(condition) != string::npos)
-            {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
-            }
+            cout << condition
+                 << order_[condition].itemid << " " << order_[condition].unitprice << " "
+                 << order_[condition].number << " " << order_[condition].date << " "
+                 << order_[condition].sellerid << " " << order_[condition].buyerid << endl;
+            return;
         }
-        return;
+        else
+        {
+            cerr << "No such order!" << endl;
+            return;
+        }
     }
     else if (column == "commodityID")
     {
         for (auto &i : order_)
         {
-            if (i.second.itemid.find(condition) != string::npos)
+            if (i.second.itemid == condition)
             {
                 cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
                      << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
@@ -738,7 +578,7 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "data")
+    else if (column == "date")
     {
         for (auto &i : order_)
         {
@@ -755,7 +595,7 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
     {
         for (auto &i : order_)
         {
-            if (i.second.sellerid.find(condition) != string::npos)
+            if (i.second.sellerid == condition)
             {
                 cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
                      << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
@@ -768,7 +608,7 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
     {
         for (auto &i : order_)
         {
-            if (i.second.buyerid.find(condition) != string::npos)
+            if (i.second.buyerid == condition)
             {
                 cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
                      << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
@@ -796,7 +636,7 @@ bool SimpleDataBase::UpdateUser(const std::string &updatedata, const std::string
         return false;
     }
     // TOFIX: 只是更新condition为userID的情形
-    if(conditionvalue[0] != "userID")
+    if (conditionvalue[0] != "userID")
     {
         cerr << "Update user condition error!" << endl;
         return false;
@@ -857,7 +697,7 @@ bool SimpleDataBase::UpdateItem(const std::string &updatedata, const std::string
         return false;
     }
     // TOFIX: 只是更新condition为itemID的情形
-    if(conditionvalue[0] != "commodityID")
+    if (conditionvalue[0] != "commodityID")
     {
         cerr << "Update item condition error!" << endl;
         return false;
@@ -921,7 +761,7 @@ bool SimpleDataBase::UpdateOrder(const std::string &updatedata, const std::strin
         return false;
     }
     // TOFIX: 只是更新condition为orderID的情形
-    if(conditionvalue[0] != "orderID")
+    if (conditionvalue[0] != "orderID")
     {
         cerr << "Update order condition error!" << endl;
         return false;
@@ -1067,33 +907,123 @@ int SimpleDataBase::ParseSql(const string &sql)
     return 0;
 }
 
-// bool SimpleDataBase::print(string tablename)
-// {
-//     if (tablename == "user")
-//     {
-//         for (auto &user : user_)
-//         {
-//             cout << user.first << " " << user.second.username << " " << user.second.password << " " << user.second.telephone << " " << user.second.address << " " << user.second.balance << " " << user.second.userstate << endl;
-//         }
-//     }
-//     else if (tablename == "item")
-//     {
-//         for (auto &item : item_)
-//         {
-//             cout << item.first << " " << item.second.itemname << " " << item.second.price << " " << item.second.number << " " << item.second.description << " " << item.second.sellerid << " " << item.second.addeddate << " " << item.second.state << endl;
-//         }
-//     }
-//     else if (tablename == "order")
-//     {
-//         for (auto &order : order_)
-//         {
-//             cout << order.first << " " << order.second.itemid << " " << order.second.unitprice << " " << order.second.number << " " << order.second.date << " " << order.second.sellerid << " " << order.second.buyerid << endl;
-//         }
-//     }
-//     else
-//     {
-//         cout << "Wrong table name!" << endl;
-//         return false;
-//     }
-//     return true;
-// }
+bool SimpleDataBase::LogFile(string sql)
+{
+    ofstream logfile("./commands.txt", ios::app);
+    if (!logfile)
+    {
+        logfile.close();
+        return false;
+    }
+
+    // struct tm stime;
+    // time_t now = time(0);
+    // localtime_s(&stime, &now);
+    // char tmp[32] = {0};
+    // strftime(tmp, sizeof(tmp), "%Y-%m-%d %H:%M:%S", &stime);
+    // string date(tmp);
+
+    logfile << endl
+            << TimeType1() << ": " << sql;
+    logfile.close();
+    return true;
+}
+
+bool SimpleDataBase::UsernameExist(const string &username)
+{
+    for (auto &i : user_)
+    {
+        if (i.second.username == username)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+string SimpleDataBase::FindUserid(const string &username)
+{
+    for (auto &i : user_)
+    {
+        if (i.second.username == username)
+        {
+            return i.first;
+        }
+    }
+    return "";
+}
+
+bool SimpleDataBase::UserVerification(const string &username, const string &password)
+{
+    for (auto &i : user_)
+    {
+        if (i.second.username == username && i.second.password == password)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+string SimpleDataBase::GetNewUserid()
+{
+    int newuser = user_.size() + 1;
+    if (newuser < 10)
+    {
+        return "U00" + to_string(newuser);
+    }
+    else if (newuser < 100)
+    {
+        return "U0" + to_string(newuser);
+    }
+    else
+    {
+        return "U" + to_string(newuser);
+    }
+}
+
+string SimpleDataBase::GetNewItemid()
+{
+    int newitem = item_.size() + 1;
+    if (newitem < 10)
+    {
+        return "M00" + to_string(newitem);
+    }
+    else if (newitem < 100)
+    {
+        return "M0" + to_string(newitem);
+    }
+    else
+    {
+        return "M" + to_string(newitem);
+    }
+}
+
+string SimpleDataBase::GetNewOrderid()
+{
+    int neworder = order_.size() + 1;
+    if (neworder < 10)
+    {
+        return "T00" + to_string(neworder);
+    }
+    else if (neworder < 100)
+    {
+        return "T0" + to_string(neworder);
+    }
+    else
+    {
+        return "T" + to_string(neworder);
+    }
+}
+
+string SimpleDataBase::GetItemOwner(const std::string &itemid)
+{
+    if (item_.find(itemid) == item_.end())
+    {
+        return "";
+    }
+    else
+    {
+        return item_[itemid].sellerid;
+    }
+}

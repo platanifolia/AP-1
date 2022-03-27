@@ -11,7 +11,7 @@ public:
 
     void AdminView();
 
-    void ViewItem(const std::string &itemname);
+    void SearchItem(const std::string &itemname);
 
     bool BanUser(const std::string &userid);
 };

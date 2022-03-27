@@ -1,5 +1,7 @@
 #include "strhandle.h"
 
+#include <ctime>
+
 using std::string;
 using std::vector;
 
@@ -13,4 +15,22 @@ void StringSplit(const string &s, vector<string> &tokens, const string &delimite
         lastPos = s.find_first_not_of(delimiters, pos);
         pos = s.find_first_of(delimiters, lastPos);
     }
+}
+
+string TimeType1()
+{
+    time_t t = time(0);
+    char tmp[64];
+    strftime(tmp, sizeof(tmp), "%Y-%m-%d %H:%M:%S", localtime(&t));
+    string ret(tmp);
+    return ret;
+}
+
+string TimeType2()
+{
+    time_t t = time(0);
+    char tmp[64];
+    strftime(tmp, sizeof(tmp), "%Y-%m-%d", localtime(&t));
+    string ret(tmp);
+    return ret;
 }

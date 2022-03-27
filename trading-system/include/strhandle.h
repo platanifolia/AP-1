@@ -6,4 +6,9 @@
 
 void StringSplit(const std::string& s, std::vector<std::string>& tokens, const std::string& delimiters = " ");
 
+// Y-M-D H:M:S
+std::string TimeType1();
+// Y-M-D
+std::string TimeType2();
+
 #endif // STRHANDLE_H_
