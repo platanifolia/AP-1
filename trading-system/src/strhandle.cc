@@ -4,6 +4,7 @@
 
 using std::string;
 using std::vector;
+using std::to_string;
 
 void StringSplit(const string &s, vector<string> &tokens, const string &delimiters/* = " "*/)
 {
@@ -32,5 +33,25 @@ string TimeType2()
     char tmp[64];
     strftime(tmp, sizeof(tmp), "%Y-%m-%d", localtime(&t));
     string ret(tmp);
+    return ret;
+}
+
+string Array2Expr(const vector<double> &array)
+{
+    string ret;
+    for(double i : array)
+    {
+        if(i >= 0)
+        {
+            ret += " + " + to_string(i);
+        }
+        else
+        {
+            ret += " - " + to_string(-i);
+        }
+    }
+    if(ret[1] == '+')
+        ret.erase(0, 3);
+    ret = "(" + ret + ")";
     return ret;
 }

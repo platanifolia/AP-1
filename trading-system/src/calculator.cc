@@ -143,6 +143,9 @@ double Evaluator::Expression(bool get)
 
 double Evaluator::Calculate()
 {
+    if(expressionlength == 0)
+        return 0;
+    // cout << "Calculate: " << expr << endl;
     current = TokenGet();
     return Expression(false);
 }

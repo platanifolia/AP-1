@@ -24,9 +24,9 @@ void InterFace::FirstView()
 {
     while (true)
     {
-        cout << string(67, '=') << endl;
+        cout << string(48, '=') << endl;
         cout << "1.管理员登录  2.用户注册  3.用户登录  4.退出系统" << endl;
-        cout << string(67, '=') << endl;
+        cout << string(48, '=') << endl;
         cout << endl;
         cout << "请输入您的选择：";
         int choice;
@@ -43,8 +43,23 @@ void InterFace::FirstView()
             break;
         }
         case 2:
-            // UserRegister();
+        {
+            string username;
+            string password;
+            cout << "请输入用户名：";
+            cin >> username;
+            cout << "请输入密码：";
+            cin >> password;
+            if (UserRegister(username, password))
+            {
+                cout << "注册成功！可在用户信息管理出修改个人信息" << endl;
+            }
+            else
+            {
+                cout << "注册失败！" << endl;
+            }
             break;
+        }
         case 3:
         {
             string username;
@@ -56,13 +71,12 @@ void InterFace::FirstView()
             if (UserVerification(username, password))
             {
                 string userid = sdb_->FindUserid(username);
-                // if(userid == "")
-                // {
-                //     cerr << "用户不存在！" << endl;
-                //     break;
-                // }
                 UserGeneral user(sdb_, sdb_->FindUserid(username));
                 user.UserGeneralView();
+            }
+            else
+            {
+                cerr << "用户名或密码错误！" << endl;
             }
             break;
         }
@@ -98,4 +112,18 @@ bool InterFace::AdminVerification()
 bool InterFace::UserVerification(const std::string &username, const std::string &password)
 {
     return sdb_->UserVerification(username, password);
+}
+
+bool InterFace::UserRegister(const std::string &username, const std::string &password)
+{
+    if (sdb_->UsernameExist(username))
+    {
+        cerr << "用户已存在！" << endl;
+        return false;
+    }
+    else
+    {
+        sdb_->ParseSql("INSERT INTO user VALUES (" + sdb_->GetNewUserid() + "," + username + "," + password + "," + "#" + "," + "#" + "," + "0" + "," + "active" + ")");
+        return true;
+    }
 }

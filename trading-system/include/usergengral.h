@@ -23,6 +23,11 @@ public:
     void BuyerViewItem();
     void SearchItem(const std::string &itemname);
     void BuyerViewOrder();
+    bool Purchase(const std::string &itemid, int buynumber);
+    // UserInfo functions
+    void ViewUserDetail();
+    bool ModifyUserInfo(int choice, const std::string &modifydata);
+    bool Recharge(double money);
 protected:
     std::string nowuserid_;
 };

@@ -11,4 +11,5 @@ std::string TimeType1();
 // Y-M-D
 std::string TimeType2();
 
+std::string Array2Expr(const std::vector<double>& array);
 #endif // STRHANDLE_H_

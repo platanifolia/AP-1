@@ -75,11 +75,21 @@ public:
 
     bool UsernameExist(const std::string &username);
     std::string FindUserid(const std::string &username);
+    std::string FindUsername(const std::string &userid);
+    std::string FindUserPhone(const std::string &userid);
+    std::string FindUserAddress(const std::string &userid);
+    double FindUserBalance(const std::string &userid);
     bool UserVerification(const std::string &username, const std::string &password);
     std::string GetNewUserid();
     std::string GetNewItemid();
     std::string GetNewOrderid();
-    std::string GetItemOwner(const std::string &itemid);
+    // std::string GetItemOwner(const std::string &itemid);
+    void ViewItemDetail(const std::string &itemid);
+    int GetItemNumber(const std::string &itemid);
+    double GetItemPrice(const std::string &itemid);
+    std::string GerItemSellerid(const std::string &itemid);
+
+    double CalculateBalance(const std::string &userid);
 };
 
 #endif // SIMPLEDATABASE_H_

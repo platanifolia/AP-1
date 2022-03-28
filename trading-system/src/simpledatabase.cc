@@ -4,10 +4,10 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-// #include <time.h>
 #include <filesystem>
 
 #include "strhandle.h"
+#include "calculator.h"
 
 using std::cerr;
 using std::cout;
@@ -682,6 +682,7 @@ bool SimpleDataBase::UpdateUser(const std::string &updatedata, const std::string
             return false;
         }
     }
+    SaveUser("data/user.txt");
     return true;
 }
 
@@ -746,6 +747,7 @@ bool SimpleDataBase::UpdateItem(const std::string &updatedata, const std::string
             return false;
         }
     }
+    SaveItem("data/commodity.txt");
     return true;
 }
 
@@ -806,6 +808,7 @@ bool SimpleDataBase::UpdateOrder(const std::string &updatedata, const std::strin
             return false;
         }
     }
+    SaveOrder("data/order.txt");
     return true;
 }
 
@@ -915,14 +918,6 @@ bool SimpleDataBase::LogFile(string sql)
         logfile.close();
         return false;
     }
-
-    // struct tm stime;
-    // time_t now = time(0);
-    // localtime_s(&stime, &now);
-    // char tmp[32] = {0};
-    // strftime(tmp, sizeof(tmp), "%Y-%m-%d %H:%M:%S", &stime);
-    // string date(tmp);
-
     logfile << endl
             << TimeType1() << ": " << sql;
     logfile.close();
@@ -951,6 +946,33 @@ string SimpleDataBase::FindUserid(const string &username)
         }
     }
     return "";
+}
+
+string SimpleDataBase::FindUsername(const string &userid)
+{
+    if (user_.find(userid) == user_.end())
+    {
+        return "";
+    }
+    return user_[userid].username;
+}
+
+string SimpleDataBase::FindUserPhone(const string &userid)
+{
+    if (user_.find(userid) == user_.end())
+    {
+        return "";
+    }
+    return user_[userid].telephone;
+}
+
+string SimpleDataBase::FindUserAddress(const string &userid)
+{
+    if (user_.find(userid) == user_.end())
+    {
+        return "";
+    }
+    return user_[userid].address;
 }
 
 bool SimpleDataBase::UserVerification(const string &username, const string &password)
@@ -1016,14 +1038,110 @@ string SimpleDataBase::GetNewOrderid()
     }
 }
 
-string SimpleDataBase::GetItemOwner(const std::string &itemid)
+// string SimpleDataBase::GetItemOwner(const std::string &itemid)
+// {
+//     if (item_.find(itemid) == item_.end())
+//     {
+//         return "";
+//     }
+//     else
+//     {
+//         return item_[itemid].sellerid;
+//     }
+// }
+
+void SimpleDataBase::ViewItemDetail(const string &itemid)
 {
     if (item_.find(itemid) == item_.end())
     {
+        cerr << "Item not found!" << endl;
+        return;
+    }
+    cout << string(30, '*') << endl;
+    cout << "商品 ID: " << itemid << endl;
+    cout << "商品 名称: " << item_[itemid].itemname << endl;
+    cout << "商品 价格: " << item_[itemid].price << endl;
+    cout << "商品 描述: " << item_[itemid].description << endl;
+    cout << "上架 时间: " << item_[itemid].addeddate << endl;
+    cout << "商品 卖家: " << item_[itemid].sellerid << endl;
+    cout << string(30, '*') << endl;
+}
+
+double SimpleDataBase::FindUserBalance(const string &userid)
+{
+    if (user_.find(userid) == user_.end())
+    {
+        cerr << "User not found!" << endl;
+        return -1;
+    }
+    return user_[userid].balance;
+}
+
+int SimpleDataBase::GetItemNumber(const string &itemid)
+{
+    if (item_.find(itemid) == item_.end())
+    {
+        cerr << "Item not found!" << endl;
+        return -1;
+    }
+    return item_[itemid].number;
+}
+
+double SimpleDataBase::GetItemPrice(const string &itemid)
+{
+    if (item_.find(itemid) == item_.end())
+    {
+        cerr << "Item not found!" << endl;
+        return -1;
+    }
+    return item_[itemid].price;
+}
+
+string SimpleDataBase::GerItemSellerid(const string &itemid)
+{
+    if (item_.find(itemid) == item_.end())
+    {
+        cerr << "Item not found!" << endl;
         return "";
     }
-    else
+    return item_[itemid].sellerid;
+}
+
+double SimpleDataBase::CalculateBalance(const string &userid)
+{
+    string expression = "";
+    ifstream recharge("data/recharge.txt");
+    string line;
+    while (getline(recharge, line))
     {
-        return item_[itemid].sellerid;
+        if (line == "")
+            continue;
+        istringstream iss(line);
+        string usid;
+        string money;
+        string data;
+        iss >> usid >> money >> data;
+        if (usid == userid)
+            expression += " + " + money;
     }
+    recharge.close();
+    expression.erase(0, 3);
+    map<int, vector<double>> link;
+    for(auto &i : order_)
+    {
+        if (i.second.sellerid == userid)
+        {
+            link[i.second.number].push_back(i.second.unitprice);
+        }
+        if(i.second.buyerid == userid)
+        {
+            link[i.second.number].push_back(-i.second.unitprice);
+        }
+    }
+    for(auto &i : link)
+    {
+        expression += " + " + to_string(i.first) + " * " + Array2Expr(i.second);
+    }
+    Evaluator evaluator(expression);
+    return evaluator.Calculate();
 }
