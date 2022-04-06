@@ -104,7 +104,7 @@ bool SimpleDataBase::LoadOrder(const string &filename)
 
 bool SimpleDataBase::SaveUser(const string &filename)
 {
-    ofstream userfile(filename);
+    ofstream userfile(filename, ios::trunc);
     if (!userfile)
     {
         userfile.close();
@@ -124,7 +124,7 @@ bool SimpleDataBase::SaveUser(const string &filename)
 
 bool SimpleDataBase::SaveItem(const string &filename)
 {
-    ofstream itemfile(filename);
+    ofstream itemfile(filename, ios::trunc);
     if (!itemfile)
     {
         itemfile.close();
@@ -144,7 +144,7 @@ bool SimpleDataBase::SaveItem(const string &filename)
 
 bool SimpleDataBase::SaveOrder(const string &filename)
 {
-    ofstream orderfile(filename);
+    ofstream orderfile(filename, ios::trunc);
     if (!orderfile)
     {
         orderfile.close();
@@ -1127,18 +1127,18 @@ double SimpleDataBase::CalculateBalance(const string &userid)
     recharge.close();
     expression.erase(0, 3);
     map<int, vector<double>> link;
-    for(auto &i : order_)
+    for (auto &i : order_)
     {
         if (i.second.sellerid == userid)
         {
             link[i.second.number].push_back(i.second.unitprice);
         }
-        if(i.second.buyerid == userid)
+        if (i.second.buyerid == userid)
         {
             link[i.second.number].push_back(-i.second.unitprice);
         }
     }
-    for(auto &i : link)
+    for (auto &i : link)
     {
         expression += " + " + to_string(i.first) + " * " + Array2Expr(i.second);
     }

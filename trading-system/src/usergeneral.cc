@@ -4,15 +4,16 @@
 #include <fstream>
 
 #include "strhandle.h"
+#include "shoppingcart.h"
 
 using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ios;
+using std::ofstream;
 using std::string;
 using std::to_string;
-using std::ofstream;
-using std::ios;
 
 UserGeneral::UserGeneral()
 {
@@ -71,7 +72,7 @@ void UserGeneral::BuyerView()
     {
         cout << "\n"
              << string(100, '=') << endl;
-        cout << "1.查看商品列表  2.购买商品  3.搜索商品  4.查看历史订单  5.查看商品详细信息  6.返回用户主界面" << endl;
+        cout << "1.查看商品列表  2.购买商品  3.搜索商品  4.查看历史订单  5.查看商品详细信息  6.进入购物车  7.返回用户主界面" << endl;
         cout << string(100, '=') << endl;
         int choice;
         cout << "请输入您的选择：";
@@ -135,6 +136,12 @@ void UserGeneral::BuyerView()
             break;
         }
         case 6:
+        {
+            ShoppingCart sc(sdb_);
+            sc.CartInterface(this->nowuserid_);
+            break;
+        }
+        case 7:
             return;
         default:
         {
@@ -337,7 +344,7 @@ void UserGeneral::UserInfoView()
             cin >> choice;
             cout << "请输入新的信息：";
             cin >> newdata;
-            if(ModifyUserInfo(choice, newdata))
+            if (ModifyUserInfo(choice, newdata))
             {
                 cout << "修改成功！" << endl;
             }
@@ -426,7 +433,7 @@ void UserGeneral::BuyerViewOrder()
     return;
 }
 
-bool UserGeneral::Purchase(const std::string &itemid, int buynumber)
+bool UserGeneral::Purchase(const string &itemid, int buynumber)
 {
     int itemnumber = sdb_->GetItemNumber(itemid);
     double unitprice = sdb_->GetItemPrice(itemid);
@@ -451,6 +458,21 @@ bool UserGeneral::Purchase(const std::string &itemid, int buynumber)
             else
             {
                 cerr << "余额不足！" << endl;
+                cout << "需要进行充值吗？(y/n):";
+                char choice;
+                cin >> choice;
+                if (choice == 'y' || choice == 'Y')
+                {
+                    double money;
+                    cout << "请输入充值金额：";
+                    cin >> money;
+                    Recharge(money);
+                    return false;
+                }
+                else
+                {
+                    return false;
+                }
                 return false;
             }
         }
@@ -469,17 +491,17 @@ bool UserGeneral::Purchase(const std::string &itemid, int buynumber)
 
 bool UserGeneral::ModifyUserInfo(int choice, const string &modifydata)
 {
-    if(choice == 1)
+    if (choice == 1)
     {
         sdb_->ParseSql("UPDATE user SET userName=" + modifydata + " WHERE userID=" + this->nowuserid_);
         return true;
     }
-    else if(choice == 2)
+    else if (choice == 2)
     {
         sdb_->ParseSql("UPDATE user SET phoneNumber=" + modifydata + " WHERE userID=" + this->nowuserid_);
         return true;
     }
-    else if(choice == 3)
+    else if (choice == 3)
     {
         sdb_->ParseSql("UPDATE user SET address=" + modifydata + " WHERE userID=" + this->nowuserid_);
         return true;
