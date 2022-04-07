@@ -3,9 +3,12 @@
 #include <iostream>
 #include <string>
 
+#include "strhandle.h"
+
 using std::cin;
 using std::cout;
 using std::endl;
+using std::getline;
 using std::string;
 
 UserAdmin::UserAdmin()
@@ -22,93 +25,101 @@ void UserAdmin::AdminView()
 {
     while (true)
     {
-        cout << string(122, '=') << endl;
+        cout << endl;
+        PrintSymbolEqual(90);
         cout << "1.查看所有商品  2.搜索商品  3.下架商品  4.查看所有订单  5.查看所有用户  6.封禁用户  7.注销" << endl;
-        cout << string(122, '=') << endl;
+        PrintSymbolEqual(90);
         cout << "请输入您的选择：";
+        string input;
         int choice;
-        cin >> choice;
+        getline(cin, input);
+        if (input.length() != 1)
+        {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
+        choice = stoi(input);
         switch (choice)
         {
         case 1:
         {
-            cout << "\n"
-                 << string(30, '*') << endl;
-            cout << "商品ID  名称  价格  上架时间  卖家ID  数量  商品状态" << endl;
+            cout << endl;
+            PrintSymbolStar(100);
+            PrintItemTitle();
             User::ViewItem();
-            cout << "\n"
-                 << string(30, '*') << endl;
+            PrintSymbolStar(100);
+            cout << endl;
             break;
         }
         case 2:
         {
             string search;
             cout << "请输入您要搜索的商品名称：";
-            cin >> search;
-            cout << "\n"
-                 << string(30, '*') << endl;
+            getline(cin, search);
+            cout << endl;
+            PrintSymbolStar(100);
             SearchItem(search);
-            cout << "\n"
-                 << string(30, '*') << endl;
+            PrintSymbolStar(100);
+            cout << endl;
             break;
         }
         case 3:
         {
             cout << "请输入要下架的商品ID：";
             string itemid;
-            cin >> itemid;
-            cout << "\n"
-                 << string(30, '*') << endl;
+            getline(cin, itemid);
+            cout << endl;
+            PrintSymbolStar(100);
+            PrintItemTitle();
             User::ViewItem(itemid);
-            cout << "\n"
-                 << string(30, '*') << endl;
+            PrintSymbolStar(100);
+            cout << endl;
             cout << "确认要下架这件商品吗？(Y/N):";
-            char choice;
-            cin >> choice;
-            if (choice == 'Y' || choice == 'y')
-            {
+            string choice;
+            getline(cin, choice);
+            if (choice == "Y" || choice == "y")
                 User::OffShelf(itemid);
-                cout << "下架成功！" << endl;
-            }
             break;
         }
         case 4:
         {
-            cout << "\n"
-                 << string(30, '*') << endl;
-            cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
+            cout << endl;
+            PrintSymbolStar(60);
+            // cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
+            PrintOrderTitle();
             User::ViewOrder();
-            cout << "\n"
-                 << string(30, '*') << endl;
+            PrintSymbolStar(60);
+            cout << endl;
             break;
         }
         case 5:
         {
-            cout << "\n"
-                 << string(30, '*') << endl;
-            cout << "用户ID  用户名  联系方式  地址  钱包余额  用户状态" << endl;
+            cout << endl;
+            PrintSymbolStar(90);
+            // cout << "用户ID  用户名  联系方式  地址  钱包余额  用户状态" << endl;
+            PrintUserTitle();
             ViewUser();
-            cout << "\n"
-                 << string(30, '*') << endl;
+            PrintSymbolStar(90);
+            cout << endl;
             break;
         }
         case 6:
         {
             cout << "请输入要封禁的用户ID：";
             string userid;
-            cin >> userid;
-            cout << "\n"
-                 << string(30, '*') << endl;
+            getline(cin, userid);
+            cout << endl;
+            PrintSymbolStar(90);
+            PrintUserTitle();
             User::ViewUser(userid);
-            cout << "\n"
-                 << string(30, '*') << endl;
+            PrintSymbolStar(90);
+            cout << endl;
             cout << "确认要封禁这个用户吗？(Y/N):";
-            char choice;
-            cin >> choice;
-            if (choice == 'Y' || choice == 'y')
+            string choice;
+            getline(cin, choice);
+            if (choice == "Y" || choice == "y")
             {
                 BanUser(userid);
-                cout << "封禁成功！" << endl;
             }
             break;
         }
@@ -133,6 +144,6 @@ void UserAdmin::SearchItem(const string &itemname)
 
 bool UserAdmin::BanUser(const string &userid)
 {
-    sdb_->ParseSql("UPDATE user SET userState=inactive WHERE userID=" + userid);
+    sdb_->ParseSql("UPDATE user SET userState=封禁 WHERE userID=" + userid);
     return true;
 }

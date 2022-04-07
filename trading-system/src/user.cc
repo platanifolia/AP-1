@@ -42,6 +42,6 @@ void User::ViewItem(const std::string &itemid)
 
 bool User::OffShelf(const std::string &itemid)
 {
-    sdb_->ParseSql("UPDATE commodity SET state=removed WHERE commodityID=" + itemid);
+    sdb_->ParseSql("UPDATE commodity SET state=已下架 WHERE commodityID=" + itemid);
     return true;
 }

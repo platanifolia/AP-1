@@ -9,6 +9,7 @@ using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::getline;
 using std::ifstream;
 using std::ios;
 using std::ofstream;
@@ -93,10 +94,10 @@ bool ShoppingCart::UpdateShoppingCart(const string &userid, const string &itemid
 
 void ShoppingCart::ViewShoppingCart(const string &userid)
 {
-    cout << "User " << userid << "'s shopping cart:" << endl;
+    cout << "用户 " << userid << "购物车:" << endl;
     if (shoppingcart_.find(userid) == shoppingcart_.end())
     {
-        cout << "Shopping cart is empty!" << endl;
+        cout << "当前没有商品" << endl;
         return;
     }
     for (auto &item : shoppingcart_[userid])
@@ -138,7 +139,7 @@ bool ShoppingCart::BuyItem(const string &userid, const string &itemid, int buynu
                 sdb_->ParseSql("UPDATE user SET balance=" + to_string(sellermoney + buynumber * unitprice) + " WHERE userID=" + sellerid);
                 sdb_->ParseSql("INSERT INTO order VALUES (" + sdb_->GetNewOrderid() + "," + itemid + "," + to_string(unitprice) + "," + to_string(buynumber) + "," + TimeType2() + "," + sellerid + "," + userid + ")");
                 if (itemnumber == buynumber)
-                    sdb_->ParseSql("UPDATE commodity SET state=removed WHERE commodityID=" + itemid);
+                    sdb_->ParseSql("UPDATE commodity SET state=已下架 WHERE commodityID=" + itemid);
                 return true;
             }
             else
@@ -148,23 +149,50 @@ bool ShoppingCart::BuyItem(const string &userid, const string &itemid, int buynu
         }
         else
         {
-            cerr << "库存不足！" << endl;
+            cout << "库存不足！" << endl;
             return false;
         }
     }
     else
     {
-        cerr << "商品不存在！" << endl;
+        cout << "商品不存在！" << endl;
         return false;
     }
+}
+
+bool ShoppingCart::DeleteItem(const string &userid, const string &itemid)
+{
+    if (shoppingcart_.find(userid) == shoppingcart_.end())
+    {
+        return false;
+    }
+    if (shoppingcart_[userid].find(itemid) == shoppingcart_[userid].end())
+    {
+        return false;
+    }
+    shoppingcart_[userid].erase(itemid);
+    return SaveShoppingCart();
 }
 
 bool ShoppingCart::BuyAll(const string &userid)
 {
     if (shoppingcart_.find(userid) == shoppingcart_.end())
     {
-        cerr << "购物车为空！" << endl;
+        cout << "购物车为空" << endl;
         return false;
+    }
+    if (this->TotalPrice(userid) > sdb_->FindUserBalance(userid))
+    {
+        cout << "余额不足" << endl;
+        return false;
+    }
+    for (auto &item : shoppingcart_[userid])
+    {
+        if (item.second > sdb_->GetItemNumber(item.first))
+        {
+            cout << item.first << "库存不足，请删除" << endl;
+            return false;
+        }
     }
     for (auto &item : shoppingcart_[userid])
     {
@@ -178,11 +206,16 @@ bool ShoppingCart::BuyAll(const string &userid)
 
 void ShoppingCart::CartInterface(const string &userid)
 {
-    cout << string(50, '-') << endl;
-    cout << "1.查看购物车  2.添加商品  3.结算  4.退出购物车" << endl;
-    cout << string(50, '-') << endl;
+    cout << endl;
+    PrintSymbolEqual(65);
+    cout << "1.查看购物车  2.添加商品  3.结算  4.删除商品  5.退出购物车" << endl;
+    PrintSymbolEqual(65);
+    cout << endl;
+    string input;
     int choice;
-    cin >> choice;
+    cout << "请输入您的选择：";
+    getline(cin, input);
+    choice = stoi(input);
     switch (choice)
     {
     case 1:
@@ -195,9 +228,10 @@ void ShoppingCart::CartInterface(const string &userid)
         string itemid;
         int number;
         cout << "请输入商品编号：" << endl;
-        cin >> itemid;
+        getline(cin, itemid);
         cout << "请输入购买数量：" << endl;
-        cin >> number;
+        getline(cin, input);
+        number = stoi(input);
         UpdateShoppingCart(userid, itemid, number);
         break;
     }
@@ -205,7 +239,7 @@ void ShoppingCart::CartInterface(const string &userid)
     {
         if (BuyAll(userid))
         {
-            cout << "购买成功！" << endl;
+            // cout << "购买成功！" << endl;
             SaveShoppingCart();
         }
         else
@@ -216,11 +250,20 @@ void ShoppingCart::CartInterface(const string &userid)
     }
     case 4:
     {
+        string itemid;
+        cout << "请输入删除商品编号：" << endl;
+        getline(cin, itemid);
+        if (!DeleteItem(userid, itemid))
+            cout << "删除失败" << endl;
+        break;
+    }
+    case 5:
+    {
         return;
     }
     default:
     {
-        cerr << "输入错误！" << endl;
+        cout << "输入错误！" << endl;
         break;
     }
     }

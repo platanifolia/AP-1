@@ -17,4 +17,8 @@ std::string Array2Expr(const std::vector<double>& array);
 void PrintSymbolEqual(int num);
 void PrintSymbolHorizontal(int num);
 void PrintSymbolStar(int num);
+
+void PrintUserTitle();
+void PrintItemTitle();
+void PrintOrderTitle();
 #endif // STRHANDLE_H_

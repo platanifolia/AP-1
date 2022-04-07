@@ -10,6 +10,7 @@ using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::getline;
 using std::ios;
 using std::ofstream;
 using std::string;
@@ -31,13 +32,20 @@ void UserGeneral::UserGeneralView()
 {
     while (true)
     {
-        cout << "\n"
-             << string(55, '=') << endl;
+        cout << endl;
+        PrintSymbolEqual(50);
         cout << "1.我是买家  2.我是卖家  3.个人信息管理  4.注销登录" << endl;
-        cout << string(55, '=') << endl;
+        PrintSymbolEqual(50);
         cout << "请输入您的选择：";
+        string input;
+        getline(cin, input);
+        if (input.length() != 1)
+        {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
         int choice;
-        cin >> choice;
+        choice = stoi(input);
         switch (choice)
         {
         case 1:
@@ -59,7 +67,7 @@ void UserGeneral::UserGeneralView()
             return;
         default:
         {
-            cerr << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入！" << endl;
             break;
         }
         }
@@ -70,22 +78,32 @@ void UserGeneral::BuyerView()
 {
     while (true)
     {
-        cout << "\n"
-             << string(100, '=') << endl;
+        // cout << "\n"
+        //      << string(70, '=') << endl;
+        cout << endl;
+        PrintSymbolEqual(106);
         cout << "1.查看商品列表  2.购买商品  3.搜索商品  4.查看历史订单  5.查看商品详细信息  6.进入购物车  7.返回用户主界面" << endl;
-        cout << string(100, '=') << endl;
+        PrintSymbolEqual(106);
         int choice;
+        string input;
         cout << "请输入您的选择：";
-        cin >> choice;
+        getline(cin, input);
+        if (input.length() != 1)
+        {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
+        choice = stoi(input);
         switch (choice)
         {
         case 1:
         {
-            cout << "\n"
-                 << string(60, '*') << endl;
-            cout << "商品ID  名称  价格  上架时间  卖家ID  数量  商品状态" << endl;
+            cout << endl;
+            PrintSymbolStar(100);
+            // cout << "商品ID  名称  价格  上架时间  卖家ID  数量  商品状态" << endl;
+            PrintItemTitle();
             BuyerViewItem();
-            cout << string(60, '*') << endl;
+            PrintSymbolStar(100);
             break;
         }
         case 2:
@@ -93,45 +111,44 @@ void UserGeneral::BuyerView()
             string itemid;
             int buynumber;
             cout << "请输入您要购买的商品ID：";
-            cin >> itemid;
+            getline(cin, itemid);
             cout << "请输入您要购买的商品数量：";
-            cin >> buynumber;
-            if (Purchase(itemid, buynumber))
-            {
-                cout << "购买成功！" << endl;
-            }
-            else
-            {
+            string input;
+            getline(cin, input);
+            buynumber = stoi(input);
+            if (!Purchase(itemid, buynumber))
                 cout << "购买失败！" << endl;
-            }
             break;
         }
         case 3:
         {
             string search;
             cout << "请输入您要搜索的商品名称：";
-            cin >> search;
-            cout << "\n"
-                 << string(60, '*') << endl;
-            cout << "商品ID  名称  价格  上架时间  卖家ID  数量  商品状态" << endl;
+            // cin >> search;
+            getline(cin, search);
+            cout << endl;
+            PrintSymbolStar(100);
+            // cout << "商品ID  名称  价格  上架时间  卖家ID  数量  商品状态" << endl;
+            PrintItemTitle();
             SearchItem(search);
-            cout << string(60, '*') << endl;
+            PrintSymbolStar(100);
             break;
         }
         case 4:
         {
-            cout << "\n";
-            cout << string(60, '*') << endl;
-            cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
+            cout << endl;
+            PrintSymbolStar(63);
+            // cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
+            PrintOrderTitle();
             BuyerViewOrder();
-            cout << string(60, '*') << endl;
+            PrintSymbolStar(63);
             break;
         }
         case 5:
         {
             string itemid;
             cout << "请输入您要查看的商品ID：";
-            cin >> itemid;
+            getline(cin, itemid);
             sdb_->ViewItemDetail(itemid);
             break;
         }
@@ -145,7 +162,7 @@ void UserGeneral::BuyerView()
             return;
         default:
         {
-            cerr << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入！" << endl;
             break;
         }
         }
@@ -156,14 +173,22 @@ void UserGeneral::SellerView()
 {
     while (true)
     {
-        cout << "\n"
-             << string(100, '=') << endl;
+        cout << endl;
+        PrintSymbolEqual(70);
         cout << "1.发布商品  2.查看发布商品  3.修改商品信息  4.下架商品  5.查看历史订单  6.返回用户主界面" << endl;
-        cout << string(100, '=') << endl;
-        cout << nowuserid_ << endl;
+        PrintSymbolEqual(70);
+        cout << endl;
+        // cout << nowuserid_ << endl;
+        string input;
         int choice;
         cout << "请输入您的选择：";
-        cin >> choice;
+        getline(cin, input);
+        if (input.length() != 1)
+        {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
+        choice = stoi(input);
         switch (choice)
         {
         case 1:
@@ -173,14 +198,14 @@ void UserGeneral::SellerView()
             string itemnumber;
             string itemdescription;
             cout << "请输入商品名称：";
-            cin >> itemname;
+            getline(cin, itemname);
             cout << "请输入商品价格：";
-            cin >> itemprice;
+            getline(cin, itemprice);
             cout << "请输入商品数量：";
-            cin >> itemnumber;
+            getline(cin, itemnumber);
             cout << "请输入商品描述：";
-            cin >> itemdescription;
-            cout << "\n";
+            getline(cin, itemdescription);
+            cout << endl;
             cout << "请确认已输入的商品信息：" << endl;
             cout << string(30, '-') << endl;
             cout << "商品名称：" << itemname << endl;
@@ -188,34 +213,28 @@ void UserGeneral::SellerView()
             cout << "商品数量：" << itemnumber << endl;
             cout << "商品描述：" << itemdescription << endl;
             cout << string(30, '-') << endl;
-            cout << "\n";
+            cout << endl;
             cout << "是否确认发布？(y/n)：";
-            char choice;
-            cin >> choice;
-            if (choice == 'y' || choice == 'Y')
+            getline(cin, input);
+            if (input == "y" || input == "Y")
             {
-                if (PostItem(itemname, itemprice, itemnumber, itemdescription))
-                {
-                    cout << "发布成功！" << endl;
-                }
-                else
-                {
+                if (!PostItem(itemname, itemprice, itemnumber, itemdescription))
                     cout << "发布失败！" << endl;
-                }
             }
             else
             {
-                cout << "取消发布商品" << endl;
+                cout << "已取消发布商品" << endl;
             }
             break;
         }
         case 2:
         {
-            cout << "\n"
-                 << string(55, '*') << endl;
-            cout << "商品ID  名称  价格  数量  描述  卖家ID  上架时间  商品状态" << endl;
+            cout << endl;
+            PrintSymbolStar(100);
+            // cout << "商品ID  名称  价格  数量  描述  卖家ID  上架时间  商品状态" << endl;
             SellerViewItem();
-            cout << string(55, '*') << endl;
+            PrintSymbolStar(100);
+            cout << endl;
             break;
         }
         case 3:
@@ -224,42 +243,34 @@ void UserGeneral::SellerView()
             int modifychoice;
             string modifydata;
             cout << "请输入需要修改的商品编号：";
-            cin >> itemid;
+            getline(cin, itemid);
             cout << "请输入您的选择(1.价格2.描述)：";
-            cin >> modifychoice;
+            getline(cin, input);
+            if (input.length() != 1)
+            {
+                cout << "输入错误，请重新输入" << endl;
+                break;
+            }
+            modifychoice = stoi(input);
             switch (modifychoice)
             {
             case 1:
             {
                 cout << "请输入新的价格：";
-                cin >> modifydata;
-                if (ModifyItem(itemid, modifychoice, modifydata))
-                {
-                    cout << "修改成功！" << endl;
-                }
-                else
-                {
-                    cout << "修改失败！" << endl;
-                }
-                break;
+                getline(cin, modifydata);
+                if (!ModifyItem(itemid, modifychoice, modifydata))
+                    cout << "修改失败" << endl;
             }
             case 2:
             {
                 cout << "请输入新的描述：";
-                cin >> modifydata;
-                if (ModifyItem(itemid, modifychoice, modifydata))
-                {
-                    cout << "修改成功！" << endl;
-                }
-                else
-                {
-                    cout << "修改失败！" << endl;
-                }
-                break;
+                getline(cin, modifydata);
+                if (!ModifyItem(itemid, modifychoice, modifydata))
+                    cout << "修改失败" << endl;
             }
             default:
             {
-                cerr << "输入错误，请重新输入！" << endl;
+                cout << "输入错误，请重新输入" << endl;
                 break;
             }
             }
@@ -267,30 +278,23 @@ void UserGeneral::SellerView()
         case 4:
         {
             string itemid;
-            cout << "请输入需要下架的商品编号：";
-            cin >> itemid;
+            getline(cin, itemid);
             if (sdb_->GerItemSellerid(itemid) != nowuserid_)
             {
-                cout << "您无权下架该商品！" << endl;
+                cout << "您无权下架该商品" << endl;
                 break;
             }
-            cout << string(60, '*') << endl;
-            cout << "商品ID  名称  价格  数量  描述  卖家ID  上架时间  商品状态" << endl;
+            PrintSymbolStar(100);
+            // cout << "商品ID  名称  价格  数量  描述  卖家ID  上架时间  商品状态" << endl;
+            PrintItemTitle();
             User::ViewItem(itemid);
-            cout << string(60, '*') << endl;
+            PrintSymbolStar(100);
             cout << "是否确认下架？(y/n)：";
-            char choice;
-            cin >> choice;
-            if (choice == 'y' || choice == 'Y')
+            getline(cin, input);
+            if (input == "y" || input == "Y")
             {
-                if (User::OffShelf(itemid))
-                {
-                    cout << "下架成功！" << endl;
-                }
-                else
-                {
+                if (!User::OffShelf(itemid))
                     cout << "下架失败！" << endl;
-                }
             }
             else
             {
@@ -300,18 +304,19 @@ void UserGeneral::SellerView()
         }
         case 5:
         {
-            cout << "\n";
-            cout << string(60, '*') << endl;
-            cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
+            cout << endl;
+            PrintSymbolStar(63);
+            // cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
+            PrintOrderTitle();
             SellerViewOrder();
-            cout << string(60, '*') << endl;
+            PrintSymbolStar(63);
             break;
         }
         case 6:
             return;
         default:
         {
-            cerr << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入！" << endl;
             break;
         }
         }
@@ -322,13 +327,20 @@ void UserGeneral::UserInfoView()
 {
     while (true)
     {
-        cout << "\n"
-             << string(60, '=') << endl;
+        cout << endl;
+        PrintSymbolEqual(50);
         cout << "1.查看信息  2.修改信息  3.充值  4.返回用户主界面" << endl;
-        cout << string(60, '=') << endl;
+        PrintSymbolEqual(50);
+        string input;
         int choice;
         cout << "请输入您的选择：";
-        cin >> choice;
+        getline(cin, input);
+        if (input.length() != 1)
+        {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
+        choice = stoi(input);
         switch (choice)
         {
         case 1:
@@ -341,24 +353,20 @@ void UserGeneral::UserInfoView()
             int choice;
             string newdata;
             cout << "请输入修改属性(1.用户名  2.联系方式  3.地址)：";
-            cin >> choice;
+            getline(cin, input);
+            choice = stoi(input);
             cout << "请输入新的信息：";
-            cin >> newdata;
-            if (ModifyUserInfo(choice, newdata))
-            {
-                cout << "修改成功！" << endl;
-            }
-            else
-            {
+            getline(cin, newdata);
+            if (!ModifyUserInfo(choice, newdata))
                 cout << "修改失败！" << endl;
-            }
             break;
         }
         case 3:
         {
             double money;
             cout << "请输入充值金额：";
-            cin >> money;
+            getline(cin, input);
+            money = stod(input);
             Recharge(money);
             break;
         }
@@ -366,7 +374,7 @@ void UserGeneral::UserInfoView()
             return;
         default:
         {
-            cerr << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入！" << endl;
             break;
         }
         }
@@ -376,7 +384,7 @@ void UserGeneral::UserInfoView()
 bool UserGeneral::PostItem(const std::string &itemname, const std::string &itemprice,
                            const std::string &itemnumber, const std::string &itemdescription)
 {
-    string itemdata = "(" + sdb_->GetNewItemid() + "," + itemname + "," + itemprice + "," + itemnumber + "," + itemdescription + "," + this->nowuserid_ + "," + TimeType2() + "," + "onSale" + ")";
+    string itemdata = "(" + sdb_->GetNewItemid() + "," + itemname + "," + itemprice + "," + itemnumber + "," + itemdescription + "," + this->nowuserid_ + "," + TimeType2() + "," + "销售中" + ")";
     sdb_->ParseSql("INSERT INTO commodity VALUES " + itemdata);
     return true;
 }
@@ -403,7 +411,7 @@ bool UserGeneral::ModifyItem(const std::string &itemid, int modifychoice, const 
     }
     default:
     {
-        cerr << "输入错误，请重新输入！" << endl;
+        cout << "输入错误，请重新输入！" << endl;
         return false;
     }
     }
@@ -417,7 +425,7 @@ void UserGeneral::SellerViewOrder()
 
 void UserGeneral::BuyerViewItem()
 {
-    sdb_->ParseSql("SELECT * FROM commodity WHERE state CONTAINS onSale");
+    sdb_->ParseSql("SELECT * FROM commodity WHERE state CONTAINS 销售中");
     return;
 }
 
@@ -452,21 +460,21 @@ bool UserGeneral::Purchase(const string &itemid, int buynumber)
                 sdb_->ParseSql("UPDATE user SET balance=" + to_string(sellermoney + buynumber * unitprice) + " WHERE userID=" + sellerid);
                 sdb_->ParseSql("INSERT INTO order VALUES (" + sdb_->GetNewOrderid() + "," + itemid + "," + to_string(unitprice) + "," + to_string(buynumber) + "," + TimeType2() + "," + sellerid + "," + this->nowuserid_ + ")");
                 if (itemnumber == buynumber)
-                    sdb_->ParseSql("UPDATE commodity SET state=removed WHERE commodityID=" + itemid);
+                    sdb_->ParseSql("UPDATE commodity SET state=已下架 WHERE commodityID=" + itemid);
                 return true;
             }
             else
             {
-                cerr << "余额不足！" << endl;
+                cout << "余额不足！" << endl;
                 cout << "需要进行充值吗？(y/n):";
-                char choice;
-                cin >> choice;
-                if (choice == 'y' || choice == 'Y')
+                string choice;
+                getline(cin, choice);
+                if (choice == "y" || choice == "Y")
                 {
-                    double money;
+                    string money;
                     cout << "请输入充值金额：";
-                    cin >> money;
-                    Recharge(money);
+                    getline(cin, money);
+                    Recharge(stod(money));
                     return false;
                 }
                 else
@@ -493,7 +501,12 @@ bool UserGeneral::ModifyUserInfo(int choice, const string &modifydata)
 {
     if (choice == 1)
     {
-        sdb_->ParseSql("UPDATE user SET userName=" + modifydata + " WHERE userID=" + this->nowuserid_);
+        if(sdb_->UsernameExist(modifydata))
+        {
+            cout << "用户名已存在" << endl;
+            return false;
+        }
+        sdb_->ParseSql("UPDATE user SET username=" + modifydata + " WHERE userID=" + this->nowuserid_);
         return true;
     }
     else if (choice == 2)
@@ -524,11 +537,13 @@ bool UserGeneral::Recharge(double money)
 
 void UserGeneral::ViewUserDetail()
 {
-    cout << string(60, '*') << endl;
+    cout << endl;
+    PrintSymbolStar(40);
     cout << "用户名：" << sdb_->FindUsername(this->nowuserid_) << endl;
     cout << "联系方式: " << sdb_->FindUserPhone(this->nowuserid_) << endl;
     cout << "地址：" << sdb_->FindUserAddress(this->nowuserid_) << endl;
     cout << "余额：" << sdb_->CalculateBalance(this->nowuserid_) << endl;
-    cout << string(60, '*') << endl;
+    PrintSymbolStar(40);
+    cout << endl;
     return;
 }

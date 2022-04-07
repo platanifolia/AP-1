@@ -4,6 +4,7 @@
 
 #include "useradmin.h"
 #include "usergengral.h"
+#include "strhandle.h"
 
 using namespace std;
 
@@ -24,13 +25,20 @@ void InterFace::FirstView()
 {
     while (true)
     {
-        cout << string(48, '=') << endl;
+        PrintSymbolEqual(48);
         cout << "1.管理员登录  2.用户注册  3.用户登录  4.退出系统" << endl;
-        cout << string(48, '=') << endl;
+        PrintSymbolEqual(48);
         cout << endl;
         cout << "请输入您的选择：";
+        string input;
+        getline(cin, input);
+        if (input.length() != 1)
+        {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
         int choice;
-        cin >> choice;
+        choice = stoi(input);
         switch (choice)
         {
         case 1:
@@ -47,14 +55,11 @@ void InterFace::FirstView()
             string username;
             string password;
             cout << "请输入用户名：";
-            cin >> username;
+            getline(cin, username);
+            // cout << username << endl;
             cout << "请输入密码：";
-            cin >> password;
-            if (UserRegister(username, password))
-            {
-                cout << "注册成功！可在用户信息管理出修改个人信息" << endl;
-            }
-            else
+            getline(cin, password);
+            if (!UserRegister(username, password))
             {
                 cout << "注册失败！" << endl;
             }
@@ -65,13 +70,13 @@ void InterFace::FirstView()
             string username;
             string password;
             cout << "请输入您的用户名：";
-            cin >> username;
+            getline(cin, username);
             cout << "请输入您的密码：";
-            cin >> password;
+            getline(cin, password);
             if (UserVerification(username, password))
             {
                 string userid = sdb_->FindUserid(username);
-                if(!sdb_->UserNotBan(userid))
+                if (!sdb_->UserNotBan(userid))
                 {
                     cout << "您的账户已被封禁，请联系管理员" << endl;
                     break;
@@ -81,7 +86,7 @@ void InterFace::FirstView()
             }
             else
             {
-                cerr << "用户名或密码错误！" << endl;
+                cout << "用户名或密码错误！" << endl;
             }
             break;
         }
@@ -98,20 +103,17 @@ bool InterFace::AdminVerification()
 {
     cout << "请输入管理员账号：";
     string adminname;
-    cin >> adminname;
+    getline(cin, adminname);
     cout << "请输入管理员密码：";
     string adminpassword;
-    cin >> adminpassword;
-    if (adminname == adminname_ && adminpassword == adminpassword_)
-    {
-        cout << "管理员登录成功！将进入管理员界面" << endl;
-        return true;
-    }
-    else
+    getline(cin, adminpassword);
+    if (adminname != adminname_ || adminpassword != adminpassword_)
     {
         cout << "管理员登录失败！将返回主界面" << endl;
         return false;
     }
+    else
+        return true;
 }
 
 bool InterFace::UserVerification(const std::string &username, const std::string &password)
@@ -123,12 +125,12 @@ bool InterFace::UserRegister(const std::string &username, const std::string &pas
 {
     if (sdb_->UsernameExist(username))
     {
-        cerr << "用户已存在！" << endl;
+        cout << "用户已存在！" << endl;
         return false;
     }
     else
     {
-        sdb_->ParseSql("INSERT INTO user VALUES (" + sdb_->GetNewUserid() + "," + username + "," + password + "," + "#" + "," + "#" + "," + "0" + "," + "active" + ")");
+        sdb_->ParseSql("INSERT INTO user VALUES (" + sdb_->GetNewUserid() + "," + username + "," + password + "," + "#" + "," + "#" + "," + "0" + "," + "正常" + ")");
         return true;
     }
 }
