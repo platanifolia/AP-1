@@ -24,6 +24,7 @@ public:
     bool BuyAll(const std::string &userid);
 
     bool BuyItem(const std::string &userid, const std::string &itemid, int number);
+    bool DeleteItem(const std::string &userid, const std::string &itemid);
 
     void CartInterface(const std::string &userid);
 };
