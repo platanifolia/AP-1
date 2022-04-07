@@ -2,7 +2,7 @@
 
 #include "interface.h"
 #include "simpledatabase.h"
-#include "utfwidth.h"
+// #include "utfwidth.h"
 // include for test, delete following later
 // #include "strhandle.h"
 // #include <vector>

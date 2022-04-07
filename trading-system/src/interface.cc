@@ -71,6 +71,11 @@ void InterFace::FirstView()
             if (UserVerification(username, password))
             {
                 string userid = sdb_->FindUserid(username);
+                if(!sdb_->UserNotBan(userid))
+                {
+                    cout << "您的账户已被封禁，请联系管理员" << endl;
+                    break;
+                }
                 UserGeneral user(sdb_, sdb_->FindUserid(username));
                 user.UserGeneralView();
             }

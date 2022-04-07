@@ -8,6 +8,7 @@
 
 #include "strhandle.h"
 #include "calculator.h"
+#include "utfwidth.h"
 
 using std::cerr;
 using std::cout;
@@ -15,6 +16,7 @@ using std::endl;
 using std::ifstream;
 using std::ios;
 using std::istringstream;
+using std::left;
 using std::map;
 using std::ofstream;
 using std::string;
@@ -218,30 +220,29 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
     {
         for (auto &i : user_)
         {
-            cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                 << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                 << i.second.userstate << endl;
+            cout << left << setw_u8(5, i.first) << i.first;
+            cout << left << setw_u8(10, i.second.username) << i.second.username;
+            cout << left << setw_u8(18, i.second.password) << i.second.password;
+            cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+            cout << left << setw_u8(20, i.second.address) << i.second.address;
+            cout << left << setw(6) << i.second.balance;
+            cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+            cout << endl;
         }
         return;
     }
     else if (column == "userID")
     {
-        // for (auto &i : user_)
-        // {
-        //     if (i.first.find(condition) != string::npos)
-        //     {
-        //         cout << i.first << " " << i.second.username << " " << i.second.password << " "
-        //              << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-        //              << i.second.userstate << endl;
-        //     }
-        // }
-        // return;
         if (user_.find(condition) != user_.end())
         {
-            cout << condition
-                 << user_[condition].username << " " << user_[condition].password << " "
-                 << user_[condition].telephone << " " << user_[condition].address << " "
-                 << user_[condition].balance << " " << user_[condition].userstate << endl;
+            cout << left << setw_u8(5, condition) << condition;
+            cout << left << setw_u8(10, user_[condition].username) << user_[condition].username;
+            cout << left << setw_u8(18, user_[condition].password) << user_[condition].password;
+            cout << left << setw_u8(15, user_[condition].telephone) << user_[condition].telephone;
+            cout << left << setw_u8(20, user_[condition].address) << user_[condition].address;
+            cout << left << setw(6) << user_[condition].balance;
+            cout << left << setw_u8(8, user_[condition].userstate) << user_[condition].userstate;
+            cout << endl;
             return;
         }
         else
@@ -256,9 +257,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         {
             if (i.second.username == condition)
             {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(10, i.second.username) << i.second.username;
+                cout << left << setw_u8(18, i.second.password) << i.second.password;
+                cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+                cout << left << setw_u8(20, i.second.address) << i.second.address;
+                cout << left << setw(6) << i.second.balance;
+                cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+                cout << endl;
                 return;
             }
         }
@@ -270,9 +276,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         {
             if (i.second.password.find(condition) != string::npos)
             {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(10, i.second.username) << i.second.username;
+                cout << left << setw_u8(18, i.second.password) << i.second.password;
+                cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+                cout << left << setw_u8(20, i.second.address) << i.second.address;
+                cout << left << setw(6) << i.second.balance;
+                cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+                cout << endl;
             }
         }
         return;
@@ -283,9 +294,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         {
             if (i.second.telephone.find(condition) != string::npos)
             {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(10, i.second.username) << i.second.username;
+                cout << left << setw_u8(18, i.second.password) << i.second.password;
+                cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+                cout << left << setw_u8(20, i.second.address) << i.second.address;
+                cout << left << setw(6) << i.second.balance;
+                cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+                cout << endl;
             }
         }
         return;
@@ -296,9 +312,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         {
             if (i.second.address.find(condition) != string::npos)
             {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(10, i.second.username) << i.second.username;
+                cout << left << setw_u8(18, i.second.password) << i.second.password;
+                cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+                cout << left << setw_u8(20, i.second.address) << i.second.address;
+                cout << left << setw(6) << i.second.balance;
+                cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+                cout << endl;
             }
         }
         return;
@@ -309,9 +330,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         {
             if (i.second.balance == stod(condition))
             {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(10, i.second.username) << i.second.username;
+                cout << left << setw_u8(18, i.second.password) << i.second.password;
+                cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+                cout << left << setw_u8(20, i.second.address) << i.second.address;
+                cout << left << setw(6) << i.second.balance;
+                cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+                cout << endl;
             }
         }
         return;
@@ -322,9 +348,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         {
             if (i.second.userstate == condition)
             {
-                cout << i.first << " " << i.second.username << " " << i.second.password << " "
-                     << i.second.telephone << " " << i.second.address << " " << i.second.balance << " "
-                     << i.second.userstate << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(10, i.second.username) << i.second.username;
+                cout << left << setw_u8(18, i.second.password) << i.second.password;
+                cout << left << setw_u8(15, i.second.telephone) << i.second.telephone;
+                cout << left << setw_u8(20, i.second.address) << i.second.address;
+                cout << left << setw(6) << i.second.balance;
+                cout << left << setw_u8(8, i.second.userstate) << i.second.userstate;
+                cout << endl;
             }
         }
         return;
@@ -338,49 +369,49 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
 
 void SimpleDataBase::SelectItem(const std::string &column, const std::string &condition)
 {
-    int selectnum = 0;
+    // int selectnum = 0;
     if (column == "" || condition == "")
     {
         for (auto &i : item_)
         {
-            selectnum += 1;
-            cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                 << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                 << i.second.addeddate << " " << i.second.state << endl;
+            // selectnum += 1;
+            // cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
+            //      << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
+            //      << i.second.addeddate << " " << i.second.state << endl;
+            cout << left << setw_u8(5, i.first) << i.first;
+            cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+            cout << left << setw(6) << i.second.price;
+            cout << left << setw(5) << i.second.number;
+            cout << left << setw_u8(30, i.second.description) << i.second.description;
+            cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+            cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+            cout << left << setw_u8(8, i.second.state) << i.second.state;
+            cout << endl;
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "commodityID")
     {
-        // for (auto &i : item_)
-        // {
-        //     if (i.first == condition)
-        //     {
-        //         selectnum += 1;
-        //         cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-        //              << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-        //              << i.second.addeddate << " " << i.second.state << endl;
-        //     }
-        // }
-        // if (selectnum == 0)
-        //     cout << "No item!" << endl;
-        // return;
         if (item_.find(condition) != item_.end())
         {
-            cout << condition
-                 << item_[condition].itemname << " " << item_[condition].price << " "
-                 << item_[condition].number << " " << item_[condition].description << " "
-                 << item_[condition].sellerid << " " << item_[condition].addeddate << " "
-                 << item_[condition].state << endl;
+            cout << left << setw_u8(5, condition) << condition;
+            cout << left << setw_u8(15, item_[condition].itemname) << item_[condition].itemname;
+            cout << left << setw(6) << item_[condition].price;
+            cout << left << setw(5) << item_[condition].number;
+            cout << left << setw_u8(30, item_[condition].description) << item_[condition].description;
+            cout << left << setw_u8(5, item_[condition].sellerid) << item_[condition].sellerid;
+            cout << left << setw_u8(11, item_[condition].addeddate) << item_[condition].addeddate;
+            cout << left << setw_u8(8, item_[condition].state) << item_[condition].state;
+            cout << endl;
             return;
         }
-        else
-        {
-            cerr << "No such item!" << endl;
-            return;
-        }
+        // else
+        // {
+        //     cerr << "No such item!" << endl;
+        //     return;
+        // }
     }
     else if (column == "commodityName")
     {
@@ -388,14 +419,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.itemname.find(condition) != string::npos)
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "price")
@@ -404,14 +441,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.price == stod(condition))
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "number")
@@ -420,14 +463,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.number == stoi(condition))
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "description")
@@ -436,14 +485,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.description.find(condition) != string::npos)
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "sellerID")
@@ -452,14 +507,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.sellerid == condition)
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "addedDate")
@@ -468,14 +529,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.addeddate.find(condition) != string::npos)
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else if (column == "state")
@@ -484,14 +551,20 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         {
             if (i.second.state == condition)
             {
-                selectnum += 1;
-                cout << i.first << " " << i.second.itemname << " " << i.second.price << " "
-                     << i.second.number << " " << i.second.description << " " << i.second.sellerid << " "
-                     << i.second.addeddate << " " << i.second.state << endl;
+                // selectnum += 1;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
+                cout << left << setw(6) << i.second.price;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(30, i.second.description) << i.second.description;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(11, i.second.addeddate) << i.second.addeddate;
+                cout << left << setw_u8(8, i.second.state) << i.second.state;
+                cout << endl;
             }
         }
-        if (selectnum == 0)
-            cout << "No item!" << endl;
+        // if (selectnum == 0)
+        //     cout << "No item!" << endl;
         return;
     }
     else
@@ -507,30 +580,29 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
     {
         for (auto &i : order_)
         {
-            cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                 << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                 << i.second.buyerid << endl;
+            cout << left << setw_u8(5, i.first) << i.first;
+            cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+            cout << left << setw(6) << i.second.unitprice;
+            cout << left << setw(5) << i.second.number;
+            cout << left << setw_u8(11, i.second.date) << i.second.date;
+            cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+            cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+            cout << endl;
         }
         return;
     }
     else if (column == "orderID")
     {
-        // for (auto &i : order_)
-        // {
-        //     if (i.first.find(condition) != string::npos)
-        //     {
-        //         cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-        //              << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-        //              << i.second.buyerid << endl;
-        //     }
-        // }
-        // return;
         if (order_.find(condition) != order_.end())
         {
-            cout << condition
-                 << order_[condition].itemid << " " << order_[condition].unitprice << " "
-                 << order_[condition].number << " " << order_[condition].date << " "
-                 << order_[condition].sellerid << " " << order_[condition].buyerid << endl;
+            cout << left << setw_u8(5, condition) << condition;
+            cout << left << setw_u8(5, order_[condition].itemid) << order_[condition].itemid;
+            cout << left << setw(6) << order_[condition].unitprice;
+            cout << left << setw(5) << order_[condition].number;
+            cout << left << setw_u8(11, order_[condition].date) << order_[condition].date;
+            cout << left << setw_u8(5, order_[condition].sellerid) << order_[condition].sellerid;
+            cout << left << setw_u8(5, order_[condition].buyerid) << order_[condition].buyerid;
+            cout << endl;
             return;
         }
         else
@@ -545,9 +617,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         {
             if (i.second.itemid == condition)
             {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+                cout << left << setw(6) << i.second.unitprice;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(11, i.second.date) << i.second.date;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+                cout << endl;
             }
         }
         return;
@@ -558,9 +635,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         {
             if (i.second.unitprice == stod(condition))
             {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+                cout << left << setw(6) << i.second.unitprice;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(11, i.second.date) << i.second.date;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+                cout << endl;
             }
         }
         return;
@@ -571,9 +653,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         {
             if (i.second.number == stoi(condition))
             {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+                cout << left << setw(6) << i.second.unitprice;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(11, i.second.date) << i.second.date;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+                cout << endl;
             }
         }
         return;
@@ -584,9 +671,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         {
             if (i.second.date.find(condition) != string::npos)
             {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+                cout << left << setw(6) << i.second.unitprice;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(11, i.second.date) << i.second.date;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+                cout << endl;
             }
         }
         return;
@@ -597,9 +689,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         {
             if (i.second.sellerid == condition)
             {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+                cout << left << setw(6) << i.second.unitprice;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(11, i.second.date) << i.second.date;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+                cout << endl;
             }
         }
         return;
@@ -610,9 +707,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         {
             if (i.second.buyerid == condition)
             {
-                cout << i.first << " " << i.second.itemid << " " << i.second.unitprice << " "
-                     << i.second.number << " " << i.second.date << " " << i.second.sellerid << " "
-                     << i.second.buyerid << endl;
+                cout << left << setw_u8(5, i.first) << i.first;
+                cout << left << setw_u8(5, i.second.itemid) << i.second.itemid;
+                cout << left << setw(6) << i.second.unitprice;
+                cout << left << setw(5) << i.second.number;
+                cout << left << setw_u8(11, i.second.date) << i.second.date;
+                cout << left << setw_u8(5, i.second.sellerid) << i.second.sellerid;
+                cout << left << setw_u8(5, i.second.buyerid) << i.second.buyerid;
+                cout << endl;
             }
         }
         return;
@@ -987,6 +1089,13 @@ bool SimpleDataBase::UserVerification(const string &username, const string &pass
     return false;
 }
 
+bool SimpleDataBase::UserNotBan(const string &userid)
+{
+    if (user_.find(userid) != user_.end())
+        return user_[userid].userstate == "active";
+    return false;
+}
+
 string SimpleDataBase::GetNewUserid()
 {
     int newuser = user_.size() + 1;
@@ -1037,18 +1146,6 @@ string SimpleDataBase::GetNewOrderid()
         return "T" + to_string(neworder);
     }
 }
-
-// string SimpleDataBase::GetItemOwner(const std::string &itemid)
-// {
-//     if (item_.find(itemid) == item_.end())
-//     {
-//         return "";
-//     }
-//     else
-//     {
-//         return item_[itemid].sellerid;
-//     }
-// }
 
 void SimpleDataBase::ViewItemDetail(const string &itemid)
 {

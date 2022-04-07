@@ -1,10 +1,13 @@
 #include "strhandle.h"
 
 #include <ctime>
+#include <iostream>
 
 using std::string;
 using std::vector;
 using std::to_string;
+using std::cout;
+using std::endl;
 
 void StringSplit(const string &s, vector<string> &tokens, const string &delimiters/* = " "*/)
 {
@@ -54,4 +57,31 @@ string Array2Expr(const vector<double> &array)
         ret.erase(0, 3);
     ret = "(" + ret + ")";
     return ret;
+}
+
+void PrintSymbolEqual(int num)
+{
+    for(int i = 0; i < num; ++i)
+    {
+        cout << "=";
+    }
+    cout << endl;
+}
+
+void PrintSymbolHorizontal(int num)
+{
+    for(int i = 0; i < num; ++i)
+    {
+        cout << "-";
+    }
+    cout << endl;
+}
+
+void PrintSymbolStar(int num)
+{
+    for(int i = 0; i < num; ++i)
+    {
+        cout << "*";
+    }
+    cout << endl;
 }
