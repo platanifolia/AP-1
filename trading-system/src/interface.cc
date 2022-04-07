@@ -1,6 +1,7 @@
 #include "interface.h"
 
 #include <iostream>
+#include <regex>
 
 #include "useradmin.h"
 #include "usergengral.h"
@@ -52,6 +53,7 @@ void InterFace::FirstView()
         }
         case 2:
         {
+            regex passwordreg("^[a-zA-Z0-9]{6,16}$");
             string username;
             string password;
             cout << "请输入用户名：";
@@ -59,6 +61,11 @@ void InterFace::FirstView()
             // cout << username << endl;
             cout << "请输入密码：";
             getline(cin, password);
+            if (!regex_match(password, passwordreg))
+            {
+                cout << "密码格式错误，请重新输入" << endl;
+                continue;
+            }
             if (!UserRegister(username, password))
             {
                 cout << "注册失败！" << endl;

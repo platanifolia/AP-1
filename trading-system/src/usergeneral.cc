@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <regex>
 
 #include "strhandle.h"
 #include "shoppingcart.h"
@@ -15,6 +16,8 @@ using std::ios;
 using std::ofstream;
 using std::string;
 using std::to_string;
+using std::regex;
+using std::regex_match;
 
 UserGeneral::UserGeneral()
 {
@@ -67,7 +70,7 @@ void UserGeneral::UserGeneralView()
             return;
         default:
         {
-            cout << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入" << endl;
             break;
         }
         }
@@ -117,14 +120,13 @@ void UserGeneral::BuyerView()
             getline(cin, input);
             buynumber = stoi(input);
             if (!Purchase(itemid, buynumber))
-                cout << "购买失败！" << endl;
+                cout << "购买失败" << endl;
             break;
         }
         case 3:
         {
             string search;
             cout << "请输入您要搜索的商品名称：";
-            // cin >> search;
             getline(cin, search);
             cout << endl;
             PrintSymbolStar(100);
@@ -162,7 +164,7 @@ void UserGeneral::BuyerView()
             return;
         default:
         {
-            cout << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入" << endl;
             break;
         }
         }
@@ -174,9 +176,9 @@ void UserGeneral::SellerView()
     while (true)
     {
         cout << endl;
-        PrintSymbolEqual(70);
+        PrintSymbolEqual(90);
         cout << "1.发布商品  2.查看发布商品  3.修改商品信息  4.下架商品  5.查看历史订单  6.返回用户主界面" << endl;
-        PrintSymbolEqual(70);
+        PrintSymbolEqual(90);
         cout << endl;
         // cout << nowuserid_ << endl;
         string input;
@@ -197,29 +199,37 @@ void UserGeneral::SellerView()
             string itemprice;
             string itemnumber;
             string itemdescription;
+            regex pricereg("^[0-9]+(.[0-9]{1,2})?$");
+            regex numberreg("^[1-9][0-9]*$");
             cout << "请输入商品名称：";
             getline(cin, itemname);
             cout << "请输入商品价格：";
             getline(cin, itemprice);
             cout << "请输入商品数量：";
             getline(cin, itemnumber);
+            if (!regex_match(itemprice, pricereg) || !regex_match(itemnumber, numberreg))
+            {
+                cout << "输入错误，请重新输入" << endl;
+                continue;
+            }
             cout << "请输入商品描述：";
             getline(cin, itemdescription);
             cout << endl;
             cout << "请确认已输入的商品信息：" << endl;
-            cout << string(30, '-') << endl;
+            PrintSymbolHorizontal(30);
+            cout << endl;
             cout << "商品名称：" << itemname << endl;
             cout << "商品价格：" << itemprice << endl;
             cout << "商品数量：" << itemnumber << endl;
             cout << "商品描述：" << itemdescription << endl;
-            cout << string(30, '-') << endl;
+            PrintSymbolHorizontal(30);
             cout << endl;
             cout << "是否确认发布？(y/n)：";
             getline(cin, input);
             if (input == "y" || input == "Y")
             {
                 if (!PostItem(itemname, itemprice, itemnumber, itemdescription))
-                    cout << "发布失败！" << endl;
+                    cout << "发布失败" << endl;
             }
             else
             {
@@ -232,6 +242,7 @@ void UserGeneral::SellerView()
             cout << endl;
             PrintSymbolStar(100);
             // cout << "商品ID  名称  价格  数量  描述  卖家ID  上架时间  商品状态" << endl;
+            PrintItemTitle();
             SellerViewItem();
             PrintSymbolStar(100);
             cout << endl;
@@ -244,7 +255,7 @@ void UserGeneral::SellerView()
             string modifydata;
             cout << "请输入需要修改的商品编号：";
             getline(cin, itemid);
-            cout << "请输入您的选择(1.价格2.描述)：";
+            cout << "请输入您的选择(1.价格  2.描述)：";
             getline(cin, input);
             if (input.length() != 1)
             {
@@ -260,6 +271,7 @@ void UserGeneral::SellerView()
                 getline(cin, modifydata);
                 if (!ModifyItem(itemid, modifychoice, modifydata))
                     cout << "修改失败" << endl;
+                break;
             }
             case 2:
             {
@@ -267,6 +279,7 @@ void UserGeneral::SellerView()
                 getline(cin, modifydata);
                 if (!ModifyItem(itemid, modifychoice, modifydata))
                     cout << "修改失败" << endl;
+                break;
             }
             default:
             {
@@ -274,6 +287,7 @@ void UserGeneral::SellerView()
                 break;
             }
             }
+            break;
         }
         case 4:
         {
@@ -294,7 +308,7 @@ void UserGeneral::SellerView()
             if (input == "y" || input == "Y")
             {
                 if (!User::OffShelf(itemid))
-                    cout << "下架失败！" << endl;
+                    cout << "下架失败" << endl;
             }
             else
             {
@@ -316,7 +330,7 @@ void UserGeneral::SellerView()
             return;
         default:
         {
-            cout << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入" << endl;
             break;
         }
         }
@@ -352,13 +366,13 @@ void UserGeneral::UserInfoView()
         {
             int choice;
             string newdata;
-            cout << "请输入修改属性(1.用户名  2.联系方式  3.地址)：";
+            cout << "请输入修改属性(1.用户名  2.联系方式  3.地址  4.密码)：";
             getline(cin, input);
             choice = stoi(input);
             cout << "请输入新的信息：";
             getline(cin, newdata);
             if (!ModifyUserInfo(choice, newdata))
-                cout << "修改失败！" << endl;
+                cout << "修改失败" << endl;
             break;
         }
         case 3:
@@ -374,7 +388,7 @@ void UserGeneral::UserInfoView()
             return;
         default:
         {
-            cout << "输入错误，请重新输入！" << endl;
+            cout << "输入错误，请重新输入" << endl;
             break;
         }
         }
@@ -411,7 +425,7 @@ bool UserGeneral::ModifyItem(const std::string &itemid, int modifychoice, const 
     }
     default:
     {
-        cout << "输入错误，请重新输入！" << endl;
+        cout << "输入错误，请重新输入" << endl;
         return false;
     }
     }
@@ -465,7 +479,7 @@ bool UserGeneral::Purchase(const string &itemid, int buynumber)
             }
             else
             {
-                cout << "余额不足！" << endl;
+                cout << "余额不足" << endl;
                 cout << "需要进行充值吗？(y/n):";
                 string choice;
                 getline(cin, choice);
@@ -486,13 +500,13 @@ bool UserGeneral::Purchase(const string &itemid, int buynumber)
         }
         else
         {
-            cerr << "库存不足！" << endl;
+            cerr << "库存不足" << endl;
             return false;
         }
     }
     else
     {
-        cerr << "商品不存在！" << endl;
+        cerr << "商品不存在" << endl;
         return false;
     }
 }
@@ -501,7 +515,7 @@ bool UserGeneral::ModifyUserInfo(int choice, const string &modifydata)
 {
     if (choice == 1)
     {
-        if(sdb_->UsernameExist(modifydata))
+        if (sdb_->UsernameExist(modifydata))
         {
             cout << "用户名已存在" << endl;
             return false;
@@ -511,12 +525,29 @@ bool UserGeneral::ModifyUserInfo(int choice, const string &modifydata)
     }
     else if (choice == 2)
     {
+        regex phonereg("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$");
+        if(!regex_match(modifydata,phonereg))
+        {
+            cout << "号码格式错误" << endl;
+            return false;
+        }
         sdb_->ParseSql("UPDATE user SET phoneNumber=" + modifydata + " WHERE userID=" + this->nowuserid_);
         return true;
     }
     else if (choice == 3)
     {
         sdb_->ParseSql("UPDATE user SET address=" + modifydata + " WHERE userID=" + this->nowuserid_);
+        return true;
+    }
+    else if (choice == 4)
+    {
+        regex passwordreg("^[a-zA-Z0-9]{6,16}$");
+        if(!regex_match(modifydata,passwordreg))
+        {
+            cout << "密码格式错误" << endl;
+            return false;
+        }
+        sdb_->ParseSql("UPDATE user SET password=" + modifydata + " WHERE userID=" + this->nowuserid_);
         return true;
     }
     else

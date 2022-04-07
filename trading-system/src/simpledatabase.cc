@@ -824,7 +824,7 @@ bool SimpleDataBase::UpdateItem(const std::string &updatedata, const std::string
         }
         else if (changetemp[0] == "price")
         {
-            item_[conditionvalue[1]].price = stoi(changetemp[1]);
+            item_[conditionvalue[1]].price = stod(changetemp[1]);
         }
         else if (changetemp[0] == "number")
         {
@@ -832,7 +832,7 @@ bool SimpleDataBase::UpdateItem(const std::string &updatedata, const std::string
         }
         else if (changetemp[0] == "description")
         {
-            item_[conditionvalue[1]].description = stoi(changetemp[1]);
+            item_[conditionvalue[1]].description = changetemp[1];
         }
         else if (changetemp[0] == "sellerID")
         {

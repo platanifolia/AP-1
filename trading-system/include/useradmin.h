@@ -13,7 +13,7 @@ public:
 
     void SearchItem(const std::string &itemname);
 
-    bool BanUser(const std::string &userid);
+    bool SwitchUserStatus(const std::string &userid);
 };
 
 #endif // USERADMIN_H_

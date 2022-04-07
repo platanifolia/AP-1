@@ -26,9 +26,9 @@ void UserAdmin::AdminView()
     while (true)
     {
         cout << endl;
-        PrintSymbolEqual(90);
-        cout << "1.查看所有商品  2.搜索商品  3.下架商品  4.查看所有订单  5.查看所有用户  6.封禁用户  7.注销" << endl;
-        PrintSymbolEqual(90);
+        PrintSymbolEqual(94);
+        cout << "1.查看所有商品  2.搜索商品  3.下架商品  4.查看所有订单  5.查看所有用户  6.用户状态切换  7.注销" << endl;
+        PrintSymbolEqual(94);
         cout << "请输入您的选择：";
         string input;
         int choice;
@@ -105,7 +105,7 @@ void UserAdmin::AdminView()
         }
         case 6:
         {
-            cout << "请输入要封禁的用户ID：";
+            cout << "请输入要切换状态的用户ID：";
             string userid;
             getline(cin, userid);
             cout << endl;
@@ -114,12 +114,12 @@ void UserAdmin::AdminView()
             User::ViewUser(userid);
             PrintSymbolStar(90);
             cout << endl;
-            cout << "确认要封禁这个用户吗？(Y/N):";
+            cout << "确认要变更这个用户吗？(Y/N):";
             string choice;
             getline(cin, choice);
             if (choice == "Y" || choice == "y")
             {
-                BanUser(userid);
+                SwitchUserStatus(userid);
             }
             break;
         }
@@ -142,8 +142,17 @@ void UserAdmin::SearchItem(const string &itemname)
     return;
 }
 
-bool UserAdmin::BanUser(const string &userid)
+bool UserAdmin::SwitchUserStatus(const string &userid)
 {
-    sdb_->ParseSql("UPDATE user SET userState=封禁 WHERE userID=" + userid);
-    return true;
+    if(sdb_->UserNotBan(userid))
+    {
+        sdb_->ParseSql("UPDATE user SET userState=封禁 WHERE userID=" + userid);
+        return true;
+    }
+    else
+    {
+        sdb_->ParseSql("UPDATE user SET userState=正常 WHERE userID=" + userid);
+        return true;
+    }
+    return false;
 }
