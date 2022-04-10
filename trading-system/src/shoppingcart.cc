@@ -20,12 +20,14 @@ ShoppingCart::ShoppingCart() {
     sdb_ = nullptr;
     ofstream cartfile("data/cart.txt", ios::app);
     cartfile.close();
+    LoadShoppingCart();
 }
 
 ShoppingCart::ShoppingCart(SimpleDataBase* sdb) {
     sdb_ = sdb;
     ofstream cartfile("data/cart.txt", ios::app);
     cartfile.close();
+    LoadShoppingCart();
 }
 
 bool ShoppingCart::LoadShoppingCart() {
@@ -104,8 +106,12 @@ bool ShoppingCart::BuyItem(const string& userid, const string& itemid, int buynu
     int    itemnumber  = sdb_->GetItemNumber(itemid);
     double unitprice   = sdb_->GetItemPrice(itemid);
     double nowmoney    = sdb_->FindUserBalance(userid);
-    string sellerid    = sdb_->GerItemSellerid(itemid);
+    string sellerid    = sdb_->GetItemSellerid(itemid);
     double sellermoney = sdb_->FindUserBalance(sellerid);
+    if (!sdb_->ItemNotDown(itemid)) {
+        cout << "商品已下架" << endl;
+        return false;
+    }
     // item exist
     if (unitprice > 0) {
         if (itemnumber >= buynumber) {
@@ -157,6 +163,10 @@ bool ShoppingCart::BuyAll(const string& userid) {
     for (auto& item : shoppingcart_[userid]) {
         if (item.second > sdb_->GetItemNumber(item.first)) {
             cout << item.first << "库存不足，请删除" << endl;
+            return false;
+        }
+        if (!sdb_->ItemNotDown(item.first)) {
+            cout << item.first << "已下架，请删除" << endl;
             return false;
         }
     }

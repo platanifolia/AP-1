@@ -60,11 +60,12 @@ public:
     void InsertItem(const std::string& insertdata);
     void InsertOrder(const std::string& insertdata);
 
-    //
+    // column为列名，condition为显示条件，直接在函数中打印，无返回值
     void SelectUser(const std::string& column = "", const std::string& condition = "");
     void SelectItem(const std::string& column = "", const std::string& condition = "");
     void SelectOrder(const std::string& column = "", const std::string& condition = "");
 
+    // 更新表数据。updatedata形如："column=value"，condition形如："key=value"
     bool UpdateUser(const std::string& updatedata, const std::string& condition = "");
     bool UpdateItem(const std::string& updatedata, const std::string& condition = "");
     bool UpdateOrder(const std::string& updatedata, const std::string& condition = "");
@@ -90,7 +91,9 @@ public:
     void        ViewItemDetail(const std::string& itemid);
     int         GetItemNumber(const std::string& itemid);
     double      GetItemPrice(const std::string& itemid);
-    std::string GerItemSellerid(const std::string& itemid);
+    std::string GetItemSellerid(const std::string& itemid);
+    bool        ItemNotDown(const std::string& itemid);
+    bool        ItemExist(const std::string& itemid);
 
     double CalculateBalance(const std::string& userid);
 };

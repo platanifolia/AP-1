@@ -996,12 +996,27 @@ double SimpleDataBase::GetItemPrice(const string& itemid) {
     return item_[itemid].price;
 }
 
-string SimpleDataBase::GerItemSellerid(const string& itemid) {
+string SimpleDataBase::GetItemSellerid(const string& itemid) {
     if (item_.find(itemid) == item_.end()) {
         cerr << "Item not found!" << endl;
         return "";
     }
     return item_[itemid].sellerid;
+}
+
+bool SimpleDataBase::ItemNotDown(const string& itemid) {
+    if (item_.find(itemid) == item_.end()) {
+        cerr << "Item not found!" << endl;
+        return false;
+    }
+    return item_[itemid].state == "销售中";
+}
+
+bool SimpleDataBase::ItemExist(const string& itemid) {
+    if (item_.find(itemid) == item_.end()) {
+        return false;
+    }
+    return true;
 }
 
 double SimpleDataBase::CalculateBalance(const string& userid) {

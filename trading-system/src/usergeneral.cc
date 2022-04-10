@@ -190,7 +190,6 @@ void UserGeneral::SellerView() {
             cout << endl;
             cout << "请确认已输入的商品信息：" << endl;
             PrintSymbolHorizontal(30);
-            cout << endl;
             cout << "商品名称：" << itemname << endl;
             cout << "商品价格：" << itemprice << endl;
             cout << "商品数量：" << itemnumber << endl;
@@ -224,6 +223,14 @@ void UserGeneral::SellerView() {
             string modifydata;
             cout << "请输入需要修改的商品编号：";
             getline(cin, itemid);
+            if(!sdb_->ItemExist(itemid)){
+                cout << "商品不存在" << endl;
+                continue;
+            }
+            if(nowuserid_ != sdb_->GetItemSellerid(itemid)){
+                cout << "您无权修改该商品" << endl;
+                continue;
+            }
             cout << "请输入您的选择(1.价格  2.描述)：";
             getline(cin, input);
             if (input.length() != 1) {
@@ -255,8 +262,9 @@ void UserGeneral::SellerView() {
         }
         case 4: {
             string itemid;
+            cout << "请输入需要下架的商品编号：";
             getline(cin, itemid);
-            if (sdb_->GerItemSellerid(itemid) != nowuserid_) {
+            if (sdb_->GetItemSellerid(itemid) != nowuserid_) {
                 cout << "您无权下架该商品" << endl;
                 break;
             }
@@ -397,8 +405,12 @@ bool UserGeneral::Purchase(const string& itemid, int buynumber) {
     int    itemnumber  = sdb_->GetItemNumber(itemid);
     double unitprice   = sdb_->GetItemPrice(itemid);
     double nowmoney    = sdb_->FindUserBalance(this->nowuserid_);
-    string sellerid    = sdb_->GerItemSellerid(itemid);
+    string sellerid    = sdb_->GetItemSellerid(itemid);
     double sellermoney = sdb_->FindUserBalance(sellerid);
+    if (!sdb_->ItemNotDown(itemid)) {
+        cout << "商品已下架" << endl;
+        return false;
+    }
     // item exist
     if (unitprice > 0) {
         if (itemnumber >= buynumber) {
