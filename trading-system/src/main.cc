@@ -12,13 +12,12 @@
 extern "C" __declspec(dllimport) int __stdcall SetConsoleOutputCP(unsigned wCodePageID);
 #endif
 
-int main()
-{
+int main() {
 #ifdef _WIN32
-	SetConsoleOutputCP(65001);
+    SetConsoleOutputCP(65001);
 #endif
-	SimpleDataBase sdb;
-	InterFace fin(&sdb);
-	fin.FirstView();
-	return 0;
+    SimpleDataBase sdb;
+    InterFace      fin(&sdb);
+    fin.FirstView();
+    return 0;
 }

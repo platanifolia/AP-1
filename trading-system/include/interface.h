@@ -5,24 +5,23 @@
 
 #include "simpledatabase.h"
 
-class InterFace
-{
+class InterFace {
 private:
     std::string adminname_;
     std::string adminpassword_;
 
     // string usernow_;
-    SimpleDataBase *sdb_;
+    SimpleDataBase* sdb_;
 
 public:
     InterFace();
-    InterFace(SimpleDataBase *sdb);
+    InterFace(SimpleDataBase* sdb);
 
     void FirstView();
-    
+
     bool AdminVerification();
-    bool UserVerification(const std::string &username, const std::string &password);
-    bool UserRegister(const std::string &username, const std::string &password);
+    bool UserVerification(const std::string& username, const std::string& password);
+    bool UserRegister(const std::string& username, const std::string& password);
 };
 
-#endif // INTERFACE_H_
+#endif  // INTERFACE_H_

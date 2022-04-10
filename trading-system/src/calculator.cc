@@ -1,17 +1,15 @@
 #include "calculator.h"
 
-#include <iostream>
 #include <cctype>
+#include <iostream>
 
-TokenType Evaluator::TokenGet()
-{
+TokenType Evaluator::TokenGet() {
     if (iter == expressionlength)
         return TokenType::kEnd;
 
     char ch = expr[iter];
 
-    switch (ch)
-    {
+    switch (ch) {
     case 0:
         return TokenType::kEnd;
     case '(':
@@ -21,7 +19,7 @@ TokenType Evaluator::TokenGet()
     case '+':
     case '-':
         iter++;
-        return static_cast<TokenType>(ch);
+        return static_cast< TokenType >(ch);
     case '.':
     case '0':
     case '1':
@@ -44,12 +42,10 @@ TokenType Evaluator::TokenGet()
     }
 }
 
-double Evaluator::Number()
-{
-    double value{0};
+double Evaluator::Number() {
+    double value{ 0 };
     string numberbuffer;
-    while (isdigit(expr[iter]) || expr[iter] == '.')
-    {
+    while (isdigit(expr[iter]) || expr[iter] == '.') {
         numberbuffer.push_back(expr[iter]);
         iter++;
         current = TokenGet();
@@ -58,24 +54,19 @@ double Evaluator::Number()
     return value;
 }
 
-double Evaluator::Primary(bool get)
-{
+double Evaluator::Primary(bool get) {
     if (get)
         current = TokenGet();
 
-    switch (current)
-    {
-    case TokenType::kNumber:
-    {
+    switch (current) {
+    case TokenType::kNumber: {
         double value = Number();
         // current = TokenGet();
         return value;
     }
-    case TokenType::kLp:
-    {
+    case TokenType::kLp: {
         double value = Expression(true);
-        if (current != TokenType::kRp)
-        {
+        if (current != TokenType::kRp) {
             // TODO: finish error handling
             cout << "Error: missing )" << endl;
         }
@@ -91,23 +82,18 @@ double Evaluator::Primary(bool get)
     }
 }
 
-double Evaluator::Term(bool get)
-{
+double Evaluator::Term(bool get) {
     double value = Primary(get);
     // TokenType current = TokenGet();
 
-    while (true)
-    {
-        switch (current)
-        {
+    while (true) {
+        switch (current) {
         case TokenType::kMul:
             value *= Primary(true);
             break;
-        case TokenType::kDiv:
-        {
+        case TokenType::kDiv: {
             double divisor = Primary(true);
-            if (divisor == 0)
-            {
+            if (divisor == 0) {
                 // TODO: finish error handling
                 cout << "Error: Division by zero" << endl;
             }
@@ -120,15 +106,12 @@ double Evaluator::Term(bool get)
     }
 }
 
-double Evaluator::Expression(bool get)
-{
+double Evaluator::Expression(bool get) {
     double value = Term(get);
     // TokenType current = TokenGet();
 
-    while (true)
-    {
-        switch (current)
-        {
+    while (true) {
+        switch (current) {
         case TokenType::kPlus:
             value += Term(true);
             break;
@@ -141,9 +124,8 @@ double Evaluator::Expression(bool get)
     }
 }
 
-double Evaluator::Calculate()
-{
-    if(expressionlength == 0)
+double Evaluator::Calculate() {
+    if (expressionlength == 0)
         return 0;
     // cout << "Calculate: " << expr << endl;
     current = TokenGet();

@@ -5,25 +5,23 @@
 
 using namespace std;
 
-enum class TokenType : char
-{
+enum class TokenType : char {
     kNumber,
     kEnd,
     kError,
-    kLp = '(',
-    kRp = ')',
-    kPlus = '+',
+    kLp    = '(',
+    kRp    = ')',
+    kPlus  = '+',
     kMinus = '-',
-    kMul = '*',
-    kDiv = '/',
+    kMul   = '*',
+    kDiv   = '/',
 };
 
-class Evaluator
-{
+class Evaluator {
 private:
-    string expr;
-    size_t iter;
-    size_t expressionlength;
+    string    expr;
+    size_t    iter;
+    size_t    expressionlength;
     TokenType current;
 
     TokenType TokenGet();
@@ -38,4 +36,4 @@ public:
     double Calculate();
 };
 
-#endif // !CALCULATOR_H_
+#endif  // !CALCULATOR_H_

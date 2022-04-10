@@ -1,13 +1,13 @@
 #include "simpledatabase.h"
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <sstream>
-#include <fstream>
 #include <vector>
-#include <filesystem>
 
-#include "strhandle.h"
 #include "calculator.h"
+#include "strhandle.h"
 #include "utfwidth.h"
 
 using std::cerr;
@@ -24,19 +24,16 @@ using std::to_string;
 using std::vector;
 using namespace std::filesystem;
 
-SimpleDataBase::SimpleDataBase()
-{
+SimpleDataBase::SimpleDataBase() {
     create_directory("data");
     LoadUser("data/user.txt");
     LoadItem("data/commodity.txt");
     LoadOrder("data/order.txt");
 }
 
-bool SimpleDataBase::LoadUser(const string &filename)
-{
+bool SimpleDataBase::LoadUser(const string& filename) {
     ifstream userfile(filename);
-    if (!userfile)
-    {
+    if (!userfile) {
         ofstream userfile(filename);
         if (userfile)
             // userfile << "userID,username,password,phoneNumber,address,balance,userState";
@@ -46,22 +43,19 @@ bool SimpleDataBase::LoadUser(const string &filename)
     }
     string line;
     getline(userfile, line);
-    while (getline(userfile, line))
-    {
-        vector<string> datatoken;
+    while (getline(userfile, line)) {
+        vector< string > datatoken;
         StringSplit(line, datatoken, ",");
-        UserInfo userinfotemp{datatoken[1], datatoken[2], datatoken[3], datatoken[4], stod(datatoken[5]), datatoken[6]};
+        UserInfo userinfotemp{ datatoken[1], datatoken[2], datatoken[3], datatoken[4], stod(datatoken[5]), datatoken[6] };
         user_[datatoken[0]] = userinfotemp;
     }
     userfile.close();
     return true;
 }
 
-bool SimpleDataBase::LoadItem(const string &filename)
-{
+bool SimpleDataBase::LoadItem(const string& filename) {
     ifstream itemfile(filename);
-    if (!itemfile)
-    {
+    if (!itemfile) {
         ofstream itemfile(filename);
         if (itemfile)
             // itemfile << "commodityID,commodityName,price,number,description,sellerID,addedDate,state";
@@ -71,22 +65,19 @@ bool SimpleDataBase::LoadItem(const string &filename)
     }
     string line;
     getline(itemfile, line);
-    while (getline(itemfile, line))
-    {
-        vector<string> datatoken;
+    while (getline(itemfile, line)) {
+        vector< string > datatoken;
         StringSplit(line, datatoken, ",");
-        ItemInfo iteminfotemp{datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6], datatoken[7]};
+        ItemInfo iteminfotemp{ datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6], datatoken[7] };
         item_[datatoken[0]] = iteminfotemp;
     }
     itemfile.close();
     return true;
 }
 
-bool SimpleDataBase::LoadOrder(const string &filename)
-{
+bool SimpleDataBase::LoadOrder(const string& filename) {
     ifstream orderfile(filename);
-    if (!orderfile)
-    {
+    if (!orderfile) {
         ofstream orderfile(filename);
         if (orderfile)
             // orderfile << "orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
@@ -96,136 +87,115 @@ bool SimpleDataBase::LoadOrder(const string &filename)
     }
     string line;
     getline(orderfile, line);
-    while (getline(orderfile, line))
-    {
-        vector<string> datatoken;
+    while (getline(orderfile, line)) {
+        vector< string > datatoken;
         StringSplit(line, datatoken, ",");
-        OrderInfo orderinfotemp{datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6]};
+        OrderInfo orderinfotemp{ datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6] };
         order_[datatoken[0]] = orderinfotemp;
     }
     orderfile.close();
     return true;
 }
 
-bool SimpleDataBase::SaveUser(const string &filename)
-{
+bool SimpleDataBase::SaveUser(const string& filename) {
     ofstream userfile(filename, ios::trunc);
-    if (!userfile)
-    {
+    if (!userfile) {
         userfile.close();
         return false;
     }
     // userfile << "userID,username,password,phoneNumber,address,balance,userState";
     userfile << "用户ID,用户名,密码,联系方式,地址,钱包余额,用户状态";
-    for (auto &user : user_)
-    {
+    for (auto& user : user_) {
         userfile << endl
-                 << user.first << ',' << user.second.username << ',' << user.second.password << ','
-                 << user.second.telephone << ',' << user.second.address << ',' << user.second.balance << ','
+                 << user.first << ',' << user.second.username << ',' << user.second.password << ',' << user.second.telephone << ',' << user.second.address << ',' << user.second.balance << ','
                  << user.second.userstate;
     }
     userfile.close();
     return true;
 }
 
-bool SimpleDataBase::SaveItem(const string &filename)
-{
+bool SimpleDataBase::SaveItem(const string& filename) {
     ofstream itemfile(filename, ios::trunc);
-    if (!itemfile)
-    {
+    if (!itemfile) {
         itemfile.close();
         return false;
     }
     // itemfile << "commodityID,commodityName,price,number,description,sellerID,addedDate,state";
     itemfile << "商品ID,名称,价格,数量,描述,卖家ID,上架时间,商品状态";
-    for (auto &item : item_)
-    {
+    for (auto& item : item_) {
         itemfile << endl
-                 << item.first << ',' << item.second.itemname << ',' << item.second.price << ',' << item.second.number
-                 << ',' << item.second.description << ',' << item.second.sellerid << ',' << item.second.addeddate << ','
-                 << item.second.state;
+                 << item.first << ',' << item.second.itemname << ',' << item.second.price << ',' << item.second.number << ',' << item.second.description << ',' << item.second.sellerid << ','
+                 << item.second.addeddate << ',' << item.second.state;
     }
     itemfile.close();
     return true;
 }
 
-bool SimpleDataBase::SaveOrder(const string &filename)
-{
+bool SimpleDataBase::SaveOrder(const string& filename) {
     ofstream orderfile(filename, ios::trunc);
-    if (!orderfile)
-    {
+    if (!orderfile) {
         orderfile.close();
         return false;
     }
     // orderfile << "orderID,commodityID,unitPrice,number,date,sellerID,buyerID";
     orderfile << "订单ID,商品ID,交易单价,数量,交易时间,卖家ID,买家ID";
-    for (auto &order : order_)
-    {
+    for (auto& order : order_) {
         orderfile << endl
-                  << order.first << ',' << order.second.itemid << ',' << order.second.unitprice << ',' << order.second.number
-                  << ',' << order.second.date << ',' << order.second.sellerid << ',' << order.second.buyerid;
+                  << order.first << ',' << order.second.itemid << ',' << order.second.unitprice << ',' << order.second.number << ',' << order.second.date << ',' << order.second.sellerid << ','
+                  << order.second.buyerid;
     }
     orderfile.close();
     return true;
 }
 
-void SimpleDataBase::InsertUser(const string &insertdata)
-{
+void SimpleDataBase::InsertUser(const string& insertdata) {
     string strtemp = insertdata;
     strtemp.erase(strtemp.begin());
     strtemp.pop_back();
-    vector<string> datatoken;
+    vector< string > datatoken;
     StringSplit(strtemp, datatoken, ",");
-    if (datatoken.size() != 7)
-    {
+    if (datatoken.size() != 7) {
         cerr << "Insert data error!" << endl;
         return;
     }
-    UserInfo userinfotemp{datatoken[1], datatoken[2], datatoken[3], datatoken[4], stod(datatoken[5]), datatoken[6]};
+    UserInfo userinfotemp{ datatoken[1], datatoken[2], datatoken[3], datatoken[4], stod(datatoken[5]), datatoken[6] };
     user_[datatoken[0]] = userinfotemp;
     SaveUser("data/user.txt");
 }
 
-void SimpleDataBase::InsertItem(const string &insertdata)
-{
+void SimpleDataBase::InsertItem(const string& insertdata) {
     string strtemp = insertdata;
     strtemp.erase(strtemp.begin());
     strtemp.pop_back();
-    vector<string> datatoken;
+    vector< string > datatoken;
     StringSplit(strtemp, datatoken, ",");
-    if (datatoken.size() != 8)
-    {
+    if (datatoken.size() != 8) {
         cerr << "Insert data error!" << endl;
         return;
     }
-    ItemInfo iteminfotemp{datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6], datatoken[7]};
+    ItemInfo iteminfotemp{ datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6], datatoken[7] };
     item_[datatoken[0]] = iteminfotemp;
     SaveItem("data/commodity.txt");
 }
 
-void SimpleDataBase::InsertOrder(const string &insertdata)
-{
+void SimpleDataBase::InsertOrder(const string& insertdata) {
     string strtemp = insertdata;
     strtemp.erase(strtemp.begin());
     strtemp.pop_back();
-    vector<string> datatoken;
+    vector< string > datatoken;
     StringSplit(strtemp, datatoken, ",");
-    if (datatoken.size() != 7)
-    {
+    if (datatoken.size() != 7) {
         cerr << "Insert data error!" << endl;
         return;
     }
-    OrderInfo orderinfotemp{datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6]};
+    OrderInfo orderinfotemp{ datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6] };
     order_[datatoken[0]] = orderinfotemp;
     SaveOrder("data/order.txt");
 }
 
-void SimpleDataBase::SelectUser(const std::string &column, const std::string &condition)
-{
-    if (column == "" || condition == "")
-    {
-        for (auto &i : user_)
-        {
+void SimpleDataBase::SelectUser(const std::string& column, const std::string& condition) {
+    if (column == "" || condition == "") {
+        for (auto& i : user_) {
             cout << left << setw_u8(8, i.first) << i.first;
             cout << left << setw_u8(10, i.second.username) << i.second.username;
             cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -237,10 +207,8 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else if (column == "userID")
-    {
-        if (user_.find(condition) != user_.end())
-        {
+    else if (column == "userID") {
+        if (user_.find(condition) != user_.end()) {
             cout << left << setw_u8(8, condition) << condition;
             cout << left << setw_u8(10, user_[condition].username) << user_[condition].username;
             cout << left << setw_u8(18, user_[condition].password) << user_[condition].password;
@@ -251,18 +219,14 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
             cout << endl;
             return;
         }
-        else
-        {
+        else {
             cerr << "No such user!" << endl;
             return;
         }
     }
-    else if (column == "username")
-    {
-        for (auto &i : user_)
-        {
-            if (i.second.username == condition)
-            {
+    else if (column == "username") {
+        for (auto& i : user_) {
+            if (i.second.username == condition) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(10, i.second.username) << i.second.username;
                 cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -276,12 +240,9 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else if (column == "password")
-    {
-        for (auto &i : user_)
-        {
-            if (i.second.password.find(condition) != string::npos)
-            {
+    else if (column == "password") {
+        for (auto& i : user_) {
+            if (i.second.password.find(condition) != string::npos) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(10, i.second.username) << i.second.username;
                 cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -294,12 +255,9 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else if (column == "phoneNumber")
-    {
-        for (auto &i : user_)
-        {
-            if (i.second.telephone.find(condition) != string::npos)
-            {
+    else if (column == "phoneNumber") {
+        for (auto& i : user_) {
+            if (i.second.telephone.find(condition) != string::npos) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(10, i.second.username) << i.second.username;
                 cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -312,12 +270,9 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else if (column == "address")
-    {
-        for (auto &i : user_)
-        {
-            if (i.second.address.find(condition) != string::npos)
-            {
+    else if (column == "address") {
+        for (auto& i : user_) {
+            if (i.second.address.find(condition) != string::npos) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(10, i.second.username) << i.second.username;
                 cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -330,12 +285,9 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else if (column == "balance")
-    {
-        for (auto &i : user_)
-        {
-            if (i.second.balance == stod(condition))
-            {
+    else if (column == "balance") {
+        for (auto& i : user_) {
+            if (i.second.balance == stod(condition)) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(10, i.second.username) << i.second.username;
                 cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -348,12 +300,9 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else if (column == "userState")
-    {
-        for (auto &i : user_)
-        {
-            if (i.second.userstate == condition)
-            {
+    else if (column == "userState") {
+        for (auto& i : user_) {
+            if (i.second.userstate == condition) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(10, i.second.username) << i.second.username;
                 cout << left << setw_u8(18, i.second.password) << i.second.password;
@@ -366,20 +315,16 @@ void SimpleDataBase::SelectUser(const std::string &column, const std::string &co
         }
         return;
     }
-    else
-    {
+    else {
         cerr << "Select user error!" << endl;
         return;
     }
 }
 
-void SimpleDataBase::SelectItem(const std::string &column, const std::string &condition)
-{
+void SimpleDataBase::SelectItem(const std::string& column, const std::string& condition) {
     // int selectnum = 0;
-    if (column == "" || condition == "")
-    {
-        for (auto &i : item_)
-        {
+    if (column == "" || condition == "") {
+        for (auto& i : item_) {
             // selectnum += 1;
             cout << left << setw_u8(8, i.first) << i.first;
             cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -395,10 +340,8 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "commodityID")
-    {
-        if (item_.find(condition) != item_.end())
-        {
+    else if (column == "commodityID") {
+        if (item_.find(condition) != item_.end()) {
             cout << left << setw_u8(8, condition) << condition;
             cout << left << setw_u8(15, item_[condition].itemname) << item_[condition].itemname;
             cout << left << setw(12) << item_[condition].price;
@@ -416,12 +359,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     return;
         // }
     }
-    else if (column == "commodityName")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.itemname.find(condition) != string::npos)
-            {
+    else if (column == "commodityName") {
+        for (auto& i : item_) {
+            if (i.second.itemname.find(condition) != string::npos) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -438,12 +378,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "price")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.price == stod(condition))
-            {
+    else if (column == "price") {
+        for (auto& i : item_) {
+            if (i.second.price == stod(condition)) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -460,12 +397,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "number")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.number == stoi(condition))
-            {
+    else if (column == "number") {
+        for (auto& i : item_) {
+            if (i.second.number == stoi(condition)) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -482,12 +416,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "description")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.description.find(condition) != string::npos)
-            {
+    else if (column == "description") {
+        for (auto& i : item_) {
+            if (i.second.description.find(condition) != string::npos) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -504,12 +435,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "sellerID")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.sellerid == condition)
-            {
+    else if (column == "sellerID") {
+        for (auto& i : item_) {
+            if (i.second.sellerid == condition) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -526,12 +454,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "addedDate")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.addeddate.find(condition) != string::npos)
-            {
+    else if (column == "addedDate") {
+        for (auto& i : item_) {
+            if (i.second.addeddate.find(condition) != string::npos) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -548,12 +473,9 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else if (column == "state")
-    {
-        for (auto &i : item_)
-        {
-            if (i.second.state == condition)
-            {
+    else if (column == "state") {
+        for (auto& i : item_) {
+            if (i.second.state == condition) {
                 // selectnum += 1;
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(15, i.second.itemname) << i.second.itemname;
@@ -570,19 +492,15 @@ void SimpleDataBase::SelectItem(const std::string &column, const std::string &co
         //     cout << "No item!" << endl;
         return;
     }
-    else
-    {
+    else {
         cerr << "Select commodity error!" << endl;
         return;
     }
 }
 
-void SimpleDataBase::SelectOrder(const std::string &column, const std::string &condition)
-{
-    if (column == "" || condition == "")
-    {
-        for (auto &i : order_)
-        {
+void SimpleDataBase::SelectOrder(const std::string& column, const std::string& condition) {
+    if (column == "" || condition == "") {
+        for (auto& i : order_) {
             cout << left << setw_u8(8, i.first) << i.first;
             cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
             cout << left << setw(12) << i.second.unitprice;
@@ -594,10 +512,8 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "orderID")
-    {
-        if (order_.find(condition) != order_.end())
-        {
+    else if (column == "orderID") {
+        if (order_.find(condition) != order_.end()) {
             cout << left << setw_u8(8, condition) << condition;
             cout << left << setw_u8(8, order_[condition].itemid) << order_[condition].itemid;
             cout << left << setw(12) << order_[condition].unitprice;
@@ -608,18 +524,14 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
             cout << endl;
             return;
         }
-        else
-        {
+        else {
             cerr << "No such order!" << endl;
             return;
         }
     }
-    else if (column == "commodityID")
-    {
-        for (auto &i : order_)
-        {
-            if (i.second.itemid == condition)
-            {
+    else if (column == "commodityID") {
+        for (auto& i : order_) {
+            if (i.second.itemid == condition) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
                 cout << left << setw(12) << i.second.unitprice;
@@ -632,12 +544,9 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "unitPrice")
-    {
-        for (auto &i : order_)
-        {
-            if (i.second.unitprice == stod(condition))
-            {
+    else if (column == "unitPrice") {
+        for (auto& i : order_) {
+            if (i.second.unitprice == stod(condition)) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
                 cout << left << setw(12) << i.second.unitprice;
@@ -650,12 +559,9 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "number")
-    {
-        for (auto &i : order_)
-        {
-            if (i.second.number == stoi(condition))
-            {
+    else if (column == "number") {
+        for (auto& i : order_) {
+            if (i.second.number == stoi(condition)) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
                 cout << left << setw(12) << i.second.unitprice;
@@ -668,12 +574,9 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "date")
-    {
-        for (auto &i : order_)
-        {
-            if (i.second.date.find(condition) != string::npos)
-            {
+    else if (column == "date") {
+        for (auto& i : order_) {
+            if (i.second.date.find(condition) != string::npos) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
                 cout << left << setw(12) << i.second.unitprice;
@@ -686,12 +589,9 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "sellerID")
-    {
-        for (auto &i : order_)
-        {
-            if (i.second.sellerid == condition)
-            {
+    else if (column == "sellerID") {
+        for (auto& i : order_) {
+            if (i.second.sellerid == condition) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
                 cout << left << setw(12) << i.second.unitprice;
@@ -704,12 +604,9 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else if (column == "buyerID")
-    {
-        for (auto &i : order_)
-        {
-            if (i.second.buyerid == condition)
-            {
+    else if (column == "buyerID") {
+        for (auto& i : order_) {
+            if (i.second.buyerid == condition) {
                 cout << left << setw_u8(8, i.first) << i.first;
                 cout << left << setw_u8(8, i.second.itemid) << i.second.itemid;
                 cout << left << setw(12) << i.second.unitprice;
@@ -722,67 +619,54 @@ void SimpleDataBase::SelectOrder(const std::string &column, const std::string &c
         }
         return;
     }
-    else
-    {
+    else {
         cerr << "Select order error!" << endl;
         return;
     }
 }
 
-bool SimpleDataBase::UpdateUser(const std::string &updatedata, const std::string &condition)
-{
-    vector<string> changevalue;
+bool SimpleDataBase::UpdateUser(const std::string& updatedata, const std::string& condition) {
+    vector< string > changevalue;
     StringSplit(updatedata, changevalue, ",");
-    vector<string> conditionvalue;
+    vector< string > conditionvalue;
     StringSplit(condition, conditionvalue, "=");
-    if (conditionvalue.size() != 2)
-    {
+    if (conditionvalue.size() != 2) {
         cerr << "Update user condition error!" << endl;
         return false;
     }
     // TOFIX: 只是更新condition为userID的情形
-    if (conditionvalue[0] != "userID")
-    {
+    if (conditionvalue[0] != "userID") {
         cerr << "Update user condition error!" << endl;
         return false;
     }
 
-    for (string &i : changevalue)
-    {
-        vector<string> changetemp;
+    for (string& i : changevalue) {
+        vector< string > changetemp;
         StringSplit(i, changetemp, "=");
-        if (changetemp.size() != 2)
-        {
+        if (changetemp.size() != 2) {
             cerr << "Update user data error 01" << endl;
             return false;
         }
-        if (changetemp[0] == "username")
-        {
+        if (changetemp[0] == "username") {
             // TOFIX: 更新username使之不重复
             user_[conditionvalue[1]].username = changetemp[1];
         }
-        else if (changetemp[0] == "password")
-        {
+        else if (changetemp[0] == "password") {
             user_[conditionvalue[1]].password = changetemp[1];
         }
-        else if (changetemp[0] == "phoneNumber")
-        {
+        else if (changetemp[0] == "phoneNumber") {
             user_[conditionvalue[1]].telephone = changetemp[1];
         }
-        else if (changetemp[0] == "address")
-        {
+        else if (changetemp[0] == "address") {
             user_[conditionvalue[1]].address = changetemp[1];
         }
-        else if (changetemp[0] == "balance")
-        {
+        else if (changetemp[0] == "balance") {
             user_[conditionvalue[1]].balance = stod(changetemp[1]);
         }
-        else if (changetemp[0] == "userState")
-        {
+        else if (changetemp[0] == "userState") {
             user_[conditionvalue[1]].userstate = changetemp[1];
         }
-        else
-        {
+        else {
             cerr << "Update user data error 02" << endl;
             return false;
         }
@@ -791,63 +675,50 @@ bool SimpleDataBase::UpdateUser(const std::string &updatedata, const std::string
     return true;
 }
 
-bool SimpleDataBase::UpdateItem(const std::string &updatedata, const std::string &condition)
-{
-    vector<string> changevalue;
+bool SimpleDataBase::UpdateItem(const std::string& updatedata, const std::string& condition) {
+    vector< string > changevalue;
     StringSplit(updatedata, changevalue, ",");
-    vector<string> conditionvalue;
+    vector< string > conditionvalue;
     StringSplit(condition, conditionvalue, "=");
-    if (conditionvalue.size() != 2)
-    {
+    if (conditionvalue.size() != 2) {
         cerr << "Update item condition error!" << endl;
         return false;
     }
     // TOFIX: 只是更新condition为itemID的情形
-    if (conditionvalue[0] != "commodityID")
-    {
+    if (conditionvalue[0] != "commodityID") {
         cerr << "Update item condition error!" << endl;
         return false;
     }
 
-    for (string &i : changevalue)
-    {
-        vector<string> changetemp;
+    for (string& i : changevalue) {
+        vector< string > changetemp;
         StringSplit(i, changetemp, "=");
-        if (changetemp.size() != 2)
-        {
+        if (changetemp.size() != 2) {
             cerr << "Update item data error!" << endl;
             return false;
         }
-        if (changetemp[0] == "commodityName")
-        {
+        if (changetemp[0] == "commodityName") {
             item_[conditionvalue[1]].itemname = changetemp[1];
         }
-        else if (changetemp[0] == "price")
-        {
+        else if (changetemp[0] == "price") {
             item_[conditionvalue[1]].price = stod(changetemp[1]);
         }
-        else if (changetemp[0] == "number")
-        {
+        else if (changetemp[0] == "number") {
             item_[conditionvalue[1]].number = stoi(changetemp[1]);
         }
-        else if (changetemp[0] == "description")
-        {
+        else if (changetemp[0] == "description") {
             item_[conditionvalue[1]].description = changetemp[1];
         }
-        else if (changetemp[0] == "sellerID")
-        {
+        else if (changetemp[0] == "sellerID") {
             item_[conditionvalue[1]].sellerid = changetemp[1];
         }
-        else if (changetemp[0] == "addedDate")
-        {
+        else if (changetemp[0] == "addedDate") {
             item_[conditionvalue[1]].addeddate = changetemp[1];
         }
-        else if (changetemp[0] == "state")
-        {
+        else if (changetemp[0] == "state") {
             item_[conditionvalue[1]].state = changetemp[1];
         }
-        else
-        {
+        else {
             cerr << "Update item data error!" << endl;
             return false;
         }
@@ -856,59 +727,47 @@ bool SimpleDataBase::UpdateItem(const std::string &updatedata, const std::string
     return true;
 }
 
-bool SimpleDataBase::UpdateOrder(const std::string &updatedata, const std::string &condition)
-{
-    vector<string> changevalue;
+bool SimpleDataBase::UpdateOrder(const std::string& updatedata, const std::string& condition) {
+    vector< string > changevalue;
     StringSplit(updatedata, changevalue, ",");
-    vector<string> conditionvalue;
+    vector< string > conditionvalue;
     StringSplit(condition, conditionvalue, "=");
-    if (conditionvalue.size() != 2)
-    {
+    if (conditionvalue.size() != 2) {
         cerr << "Update order condition error!" << endl;
         return false;
     }
     // TOFIX: 只是更新condition为orderID的情形
-    if (conditionvalue[0] != "orderID")
-    {
+    if (conditionvalue[0] != "orderID") {
         cerr << "Update order condition error!" << endl;
         return false;
     }
 
-    for (string &i : changevalue)
-    {
-        vector<string> changetemp;
+    for (string& i : changevalue) {
+        vector< string > changetemp;
         StringSplit(i, changetemp, "=");
-        if (changetemp.size() != 2)
-        {
+        if (changetemp.size() != 2) {
             cerr << "Update order data error!" << endl;
             return false;
         }
-        if (changetemp[0] == "commodityID")
-        {
+        if (changetemp[0] == "commodityID") {
             order_[conditionvalue[1]].itemid = changetemp[1];
         }
-        else if (changetemp[0] == "unitPrice")
-        {
+        else if (changetemp[0] == "unitPrice") {
             order_[conditionvalue[1]].unitprice = stod(changetemp[1]);
         }
-        else if (changetemp[0] == "number")
-        {
+        else if (changetemp[0] == "number") {
             order_[conditionvalue[1]].number = stoi(changetemp[1]);
         }
-        else if (changetemp[0] == "date")
-        {
+        else if (changetemp[0] == "date") {
             order_[conditionvalue[1]].date = changetemp[1];
         }
-        else if (changetemp[0] == "sellerID")
-        {
+        else if (changetemp[0] == "sellerID") {
             order_[conditionvalue[1]].sellerid = changetemp[1];
         }
-        else if (changetemp[0] == "buyerID")
-        {
+        else if (changetemp[0] == "buyerID") {
             order_[conditionvalue[1]].buyerid = changetemp[1];
         }
-        else
-        {
+        else {
             cerr << "Update order data error!" << endl;
             return false;
         }
@@ -917,243 +776,189 @@ bool SimpleDataBase::UpdateOrder(const std::string &updatedata, const std::strin
     return true;
 }
 
-int SimpleDataBase::ParseSql(const string &sql)
-{
+int SimpleDataBase::ParseSql(const string& sql) {
     LogFile(sql);
-    vector<string> sqltokens;
+    vector< string > sqltokens;
     StringSplit(sql, sqltokens, " ");
-    if (sqltokens[0] == "INSERT" && sqltokens[1] == "INTO" && sqltokens[3] == "VALUES")
-    {
-        if (sqltokens[2] == "user")
-        {
+    if (sqltokens[0] == "INSERT" && sqltokens[1] == "INTO" && sqltokens[3] == "VALUES") {
+        if (sqltokens[2] == "user") {
             InsertUser(sqltokens[4]);
             return 1;
         }
-        else if (sqltokens[2] == "commodity")
-        {
+        else if (sqltokens[2] == "commodity") {
             InsertItem(sqltokens[4]);
             return 2;
         }
-        else if (sqltokens[2] == "order")
-        {
+        else if (sqltokens[2] == "order") {
             InsertOrder(sqltokens[4]);
             return 3;
         }
     }
-    else if (sqltokens[0] == "SELECT" && sqltokens[1] == "*" && sqltokens[2] == "FROM")
-    {
-        if (sqltokens.size() == 4)
-        {
-            if (sqltokens[3] == "user")
-            {
+    else if (sqltokens[0] == "SELECT" && sqltokens[1] == "*" && sqltokens[2] == "FROM") {
+        if (sqltokens.size() == 4) {
+            if (sqltokens[3] == "user") {
                 SelectUser();
                 return 4;
             }
-            else if (sqltokens[3] == "commodity")
-            {
+            else if (sqltokens[3] == "commodity") {
                 SelectItem();
                 return 5;
             }
-            else if (sqltokens[3] == "order")
-            {
+            else if (sqltokens[3] == "order") {
                 SelectOrder();
                 return 6;
             }
-            else
-            {
+            else {
                 cerr << "Select data error!" << endl;
                 return 0;
             }
         }
-        else if (sqltokens.size() == 8 && sqltokens[6] == "CONTAINS")
-        {
-            if (sqltokens[3] == "user")
-            {
+        else if (sqltokens.size() == 8 && sqltokens[6] == "CONTAINS") {
+            if (sqltokens[3] == "user") {
                 SelectUser(sqltokens[5], sqltokens[7]);
                 return 4;
             }
-            else if (sqltokens[3] == "commodity")
-            {
+            else if (sqltokens[3] == "commodity") {
                 SelectItem(sqltokens[5], sqltokens[7]);
                 return 5;
             }
-            else if (sqltokens[3] == "order")
-            {
+            else if (sqltokens[3] == "order") {
                 SelectOrder(sqltokens[5], sqltokens[7]);
                 return 6;
             }
-            else
-            {
+            else {
                 cerr << "Select data error!" << endl;
                 return 0;
             }
         }
     }
-    else if (sqltokens[0] == "UPDATE" && sqltokens[2] == "SET" && sqltokens[4] == "WHERE")
-    {
-        if (sqltokens[1] == "user")
-        {
+    else if (sqltokens[0] == "UPDATE" && sqltokens[2] == "SET" && sqltokens[4] == "WHERE") {
+        if (sqltokens[1] == "user") {
             UpdateUser(sqltokens[3], sqltokens[5]);
             return 7;
         }
-        else if (sqltokens[1] == "commodity")
-        {
+        else if (sqltokens[1] == "commodity") {
             UpdateItem(sqltokens[3], sqltokens[5]);
             return 8;
         }
-        else if (sqltokens[1] == "order")
-        {
+        else if (sqltokens[1] == "order") {
             UpdateOrder(sqltokens[3], sqltokens[5]);
             return 9;
         }
     }
-    else
-    {
+    else {
         cerr << "Sql error!" << endl;
         return 0;
     }
     return 0;
 }
 
-bool SimpleDataBase::LogFile(string sql)
-{
+bool SimpleDataBase::LogFile(string sql) {
     ofstream logfile("./commands.txt", ios::app);
-    if (!logfile)
-    {
+    if (!logfile) {
         logfile.close();
         return false;
     }
-    logfile << endl
-            << TimeType1() << ": " << sql;
+    logfile << endl << TimeType1() << ": " << sql;
     logfile.close();
     return true;
 }
 
-bool SimpleDataBase::UsernameExist(const string &username)
-{
-    for (auto &i : user_)
-    {
-        if (i.second.username == username)
-        {
+bool SimpleDataBase::UsernameExist(const string& username) {
+    for (auto& i : user_) {
+        if (i.second.username == username) {
             return true;
         }
     }
     return false;
 }
 
-string SimpleDataBase::FindUserid(const string &username)
-{
-    for (auto &i : user_)
-    {
-        if (i.second.username == username)
-        {
+string SimpleDataBase::FindUserid(const string& username) {
+    for (auto& i : user_) {
+        if (i.second.username == username) {
             return i.first;
         }
     }
     return "";
 }
 
-string SimpleDataBase::FindUsername(const string &userid)
-{
-    if (user_.find(userid) == user_.end())
-    {
+string SimpleDataBase::FindUsername(const string& userid) {
+    if (user_.find(userid) == user_.end()) {
         return "";
     }
     return user_[userid].username;
 }
 
-string SimpleDataBase::FindUserPhone(const string &userid)
-{
-    if (user_.find(userid) == user_.end())
-    {
+string SimpleDataBase::FindUserPhone(const string& userid) {
+    if (user_.find(userid) == user_.end()) {
         return "";
     }
     return user_[userid].telephone;
 }
 
-string SimpleDataBase::FindUserAddress(const string &userid)
-{
-    if (user_.find(userid) == user_.end())
-    {
+string SimpleDataBase::FindUserAddress(const string& userid) {
+    if (user_.find(userid) == user_.end()) {
         return "";
     }
     return user_[userid].address;
 }
 
-bool SimpleDataBase::UserVerification(const string &username, const string &password)
-{
-    for (auto &i : user_)
-    {
-        if (i.second.username == username && i.second.password == password)
-        {
+bool SimpleDataBase::UserVerification(const string& username, const string& password) {
+    for (auto& i : user_) {
+        if (i.second.username == username && i.second.password == password) {
             return true;
         }
     }
     return false;
 }
 
-bool SimpleDataBase::UserNotBan(const string &userid)
-{
+bool SimpleDataBase::UserNotBan(const string& userid) {
     if (user_.find(userid) != user_.end())
         return user_[userid].userstate == "正常";
     return false;
 }
 
-string SimpleDataBase::GetNewUserid()
-{
+string SimpleDataBase::GetNewUserid() {
     int newuser = user_.size() + 1;
-    if (newuser < 10)
-    {
+    if (newuser < 10) {
         return "U00" + to_string(newuser);
     }
-    else if (newuser < 100)
-    {
+    else if (newuser < 100) {
         return "U0" + to_string(newuser);
     }
-    else
-    {
+    else {
         return "U" + to_string(newuser);
     }
 }
 
-string SimpleDataBase::GetNewItemid()
-{
+string SimpleDataBase::GetNewItemid() {
     int newitem = item_.size() + 1;
-    if (newitem < 10)
-    {
+    if (newitem < 10) {
         return "M00" + to_string(newitem);
     }
-    else if (newitem < 100)
-    {
+    else if (newitem < 100) {
         return "M0" + to_string(newitem);
     }
-    else
-    {
+    else {
         return "M" + to_string(newitem);
     }
 }
 
-string SimpleDataBase::GetNewOrderid()
-{
+string SimpleDataBase::GetNewOrderid() {
     int neworder = order_.size() + 1;
-    if (neworder < 10)
-    {
+    if (neworder < 10) {
         return "T00" + to_string(neworder);
     }
-    else if (neworder < 100)
-    {
+    else if (neworder < 100) {
         return "T0" + to_string(neworder);
     }
-    else
-    {
+    else {
         return "T" + to_string(neworder);
     }
 }
 
-void SimpleDataBase::ViewItemDetail(const string &itemid)
-{
-    if (item_.find(itemid) == item_.end())
-    {
+void SimpleDataBase::ViewItemDetail(const string& itemid) {
+    if (item_.find(itemid) == item_.end()) {
         cerr << "Item not found!" << endl;
         return;
     }
@@ -1167,79 +972,65 @@ void SimpleDataBase::ViewItemDetail(const string &itemid)
     cout << string(30, '*') << endl;
 }
 
-double SimpleDataBase::FindUserBalance(const string &userid)
-{
-    if (user_.find(userid) == user_.end())
-    {
+double SimpleDataBase::FindUserBalance(const string& userid) {
+    if (user_.find(userid) == user_.end()) {
         cerr << "User not found!" << endl;
         return -1;
     }
     return user_[userid].balance;
 }
 
-int SimpleDataBase::GetItemNumber(const string &itemid)
-{
-    if (item_.find(itemid) == item_.end())
-    {
+int SimpleDataBase::GetItemNumber(const string& itemid) {
+    if (item_.find(itemid) == item_.end()) {
         cerr << "Item not found!" << endl;
         return -1;
     }
     return item_[itemid].number;
 }
 
-double SimpleDataBase::GetItemPrice(const string &itemid)
-{
-    if (item_.find(itemid) == item_.end())
-    {
+double SimpleDataBase::GetItemPrice(const string& itemid) {
+    if (item_.find(itemid) == item_.end()) {
         cerr << "Item not found!" << endl;
         return -1;
     }
     return item_[itemid].price;
 }
 
-string SimpleDataBase::GerItemSellerid(const string &itemid)
-{
-    if (item_.find(itemid) == item_.end())
-    {
+string SimpleDataBase::GerItemSellerid(const string& itemid) {
+    if (item_.find(itemid) == item_.end()) {
         cerr << "Item not found!" << endl;
         return "";
     }
     return item_[itemid].sellerid;
 }
 
-double SimpleDataBase::CalculateBalance(const string &userid)
-{
-    string expression = "";
+double SimpleDataBase::CalculateBalance(const string& userid) {
+    string   expression = "";
     ifstream recharge("data/recharge.txt");
-    string line;
-    while (getline(recharge, line))
-    {
+    string   line;
+    while (getline(recharge, line)) {
         if (line == "")
             continue;
         istringstream iss(line);
-        string usid;
-        string money;
-        string data;
+        string        usid;
+        string        money;
+        string        data;
         iss >> usid >> money >> data;
         if (usid == userid)
             expression += " + " + money;
     }
     recharge.close();
     expression.erase(0, 3);
-    map<int, vector<double>> link;
-    for (auto &i : order_)
-    {
-        if (i.second.sellerid == userid)
-        {
+    map< int, vector< double > > link;
+    for (auto& i : order_) {
+        if (i.second.sellerid == userid) {
             link[i.second.number].push_back(i.second.unitprice);
         }
-        if (i.second.buyerid == userid)
-        {
+        if (i.second.buyerid == userid) {
             link[i.second.number].push_back(-i.second.unitprice);
         }
     }
-    for (auto &i : link)
-    {
+    for (auto& i : link) {
         expression += " + " + to_string(i.first) + " * " + Array2Expr(i.second);
     }
     Evaluator evaluator(expression);

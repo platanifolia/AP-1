@@ -12,47 +12,39 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-void StringSplit(const string &s, vector<string> &tokens, const string &delimiters /* = " "*/)
-{
+void StringSplit(const string& s, vector< string >& tokens, const string& delimiters /* = " "*/) {
     string::size_type lastPos = s.find_first_not_of(delimiters, 0);
-    string::size_type pos = s.find_first_of(delimiters, lastPos);
-    while (string::npos != pos || string::npos != lastPos)
-    {
+    string::size_type pos     = s.find_first_of(delimiters, lastPos);
+    while (string::npos != pos || string::npos != lastPos) {
         tokens.push_back(s.substr(lastPos, pos - lastPos));
         lastPos = s.find_first_not_of(delimiters, pos);
-        pos = s.find_first_of(delimiters, lastPos);
+        pos     = s.find_first_of(delimiters, lastPos);
     }
 }
 
-string TimeType1()
-{
+string TimeType1() {
     time_t t = time(0);
-    char tmp[64];
+    char   tmp[64];
     strftime(tmp, sizeof(tmp), "%Y-%m-%d %H:%M:%S", localtime(&t));
     string ret(tmp);
     return ret;
 }
 
-string TimeType2()
-{
+string TimeType2() {
     time_t t = time(0);
-    char tmp[64];
+    char   tmp[64];
     strftime(tmp, sizeof(tmp), "%Y-%m-%d", localtime(&t));
     string ret(tmp);
     return ret;
 }
 
-string Array2Expr(const vector<double> &array)
-{
+string Array2Expr(const vector< double >& array) {
     string ret;
-    for (double i : array)
-    {
-        if (i >= 0)
-        {
+    for (double i : array) {
+        if (i >= 0) {
             ret += " + " + to_string(i);
         }
-        else
-        {
+        else {
             ret += " - " + to_string(-i);
         }
     }
@@ -62,35 +54,28 @@ string Array2Expr(const vector<double> &array)
     return ret;
 }
 
-void PrintSymbolEqual(int num)
-{
-    for (int i = 0; i < num; ++i)
-    {
+void PrintSymbolEqual(int num) {
+    for (int i = 0; i < num; ++i) {
         cout << "=";
     }
     cout << endl;
 }
 
-void PrintSymbolHorizontal(int num)
-{
-    for (int i = 0; i < num; ++i)
-    {
+void PrintSymbolHorizontal(int num) {
+    for (int i = 0; i < num; ++i) {
         cout << "-";
     }
     cout << endl;
 }
 
-void PrintSymbolStar(int num)
-{
-    for (int i = 0; i < num; ++i)
-    {
+void PrintSymbolStar(int num) {
+    for (int i = 0; i < num; ++i) {
         cout << "*";
     }
     cout << endl;
 }
 
-void PrintUserTitle()
-{
+void PrintUserTitle() {
     cout << left << setw_u8(8, "用户ID") << "用户ID";
     cout << left << setw_u8(10, "用户名") << "用户名";
     cout << left << setw_u8(18, "用户密码") << "用户密码";
@@ -101,8 +86,7 @@ void PrintUserTitle()
     cout << endl;
 }
 
-void PrintItemTitle()
-{
+void PrintItemTitle() {
     cout << left << setw_u8(8, "商品ID") << "商品ID";
     cout << left << setw_u8(15, "商品名") << "商品名";
     cout << left << setw_u8(12, "商品价格") << "商品价格";
@@ -114,8 +98,7 @@ void PrintItemTitle()
     cout << endl;
 }
 
-void PrintOrderTitle()
-{
+void PrintOrderTitle() {
     cout << left << setw_u8(8, "订单ID") << "订单ID";
     cout << left << setw_u8(8, "商品ID") << "商品ID";
     cout << left << setw_u8(12, "交易单价") << "交易单价";

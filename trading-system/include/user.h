@@ -3,11 +3,10 @@
 
 #include "simpledatabase.h"
 
-class User
-{
+class User {
 public:
     User();
-    User(SimpleDataBase *sdb);
+    User(SimpleDataBase* sdb);
 
     // Admin functions, view all
     void ViewUser();
@@ -17,13 +16,14 @@ public:
     void ViewOrder();
 
     // view user by userid
-    void ViewUser(const std::string &userid);
+    void ViewUser(const std::string& userid);
     // view item by itemid
-    void ViewItem(const std::string &itemid);
+    void ViewItem(const std::string& itemid);
     // Off shelf commomity by itemid
-    bool OffShelf(const std::string &itemid);
+    bool OffShelf(const std::string& itemid);
+
 protected:
-    SimpleDataBase *sdb_;
+    SimpleDataBase* sdb_;
 };
 
-#endif // USER_H_
+#endif  // USER_H_
