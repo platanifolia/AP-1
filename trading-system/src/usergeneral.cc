@@ -39,7 +39,7 @@ void UserGeneral::UserGeneralView() {
         string input;
         getline(cin, input);
         if (input.length() != 1) {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             continue;
         }
         int choice;
@@ -60,7 +60,7 @@ void UserGeneral::UserGeneralView() {
         case 4:
             return;
         default: {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             break;
         }
         }
@@ -80,7 +80,7 @@ void UserGeneral::BuyerView() {
         cout << "请输入您的选择：";
         getline(cin, input);
         if (input.length() != 1) {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             continue;
         }
         choice = stoi(input);
@@ -100,11 +100,11 @@ void UserGeneral::BuyerView() {
             cout << "请输入您要购买的商品ID：";
             getline(cin, itemid);
             if (nowuserid_ == sdb_->GetItemSellerid(itemid)) {
-                cout << "您不能购买自己的商品" << endl;
+                cout << "\033[96m您不能购买自己的商品\033[0m" << endl;
                 continue;
             }
             if (!sdb_->ItemExist(itemid)) {
-                cout << "商品不存在" << endl;
+                cout << "\033[96m商品不存在\033[0m" << endl;
                 continue;
             }
             cout << "请输入您要购买的商品数量：";
@@ -112,11 +112,11 @@ void UserGeneral::BuyerView() {
             getline(cin, input);
             buynumber = stoi(input);
             if (buynumber > sdb_->GetItemNumber(itemid)) {
-                cout << "商品库存不足" << endl;
+                cout << "\033[96m商品库存不足\033[0m" << endl;
                 continue;
             }
             if (!Purchase(itemid, buynumber))
-                cout << "购买失败" << endl;
+                cout << "\033[96m购买失败\033[0m" << endl;
             break;
         }
         case 3: {
@@ -155,7 +155,7 @@ void UserGeneral::BuyerView() {
         case 7:
             return;
         default: {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             break;
         }
         }
@@ -175,7 +175,7 @@ void UserGeneral::SellerView() {
         cout << "请输入您的选择：";
         getline(cin, input);
         if (input.length() != 1) {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             continue;
         }
         choice = stoi(input);
@@ -194,7 +194,7 @@ void UserGeneral::SellerView() {
             cout << "请输入商品数量：";
             getline(cin, itemnumber);
             if (!regex_match(itemprice, pricereg) || !regex_match(itemnumber, numberreg)) {
-                cout << "输入错误，请重新输入" << endl;
+                cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
                 continue;
             }
             cout << "请输入商品描述：";
@@ -212,10 +212,10 @@ void UserGeneral::SellerView() {
             getline(cin, input);
             if (input == "y" || input == "Y") {
                 if (!PostItem(itemname, itemprice, itemnumber, itemdescription))
-                    cout << "发布失败" << endl;
+                    cout << "\033[96m发布失败\033[0m" << endl;
             }
             else {
-                cout << "已取消发布商品" << endl;
+                cout << "\033[96m已取消发布商品\033[0m" << endl;
             }
             break;
         }
@@ -236,17 +236,17 @@ void UserGeneral::SellerView() {
             cout << "请输入需要修改的商品编号：";
             getline(cin, itemid);
             if (!sdb_->ItemExist(itemid)) {
-                cout << "商品不存在" << endl;
+                cout << "\033[96m商品不存在\033[0m" << endl;
                 continue;
             }
             if (nowuserid_ != sdb_->GetItemSellerid(itemid)) {
-                cout << "您无权修改该商品" << endl;
+                cout << "\033[96m您无权修改该商品\033[0m" << endl;
                 continue;
             }
             cout << "请输入您的选择(1.价格  2.描述)：";
             getline(cin, input);
             if (input.length() != 1) {
-                cout << "输入错误，请重新输入" << endl;
+                cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
                 break;
             }
             modifychoice = stoi(input);
@@ -255,18 +255,18 @@ void UserGeneral::SellerView() {
                 cout << "请输入新的价格：";
                 getline(cin, modifydata);
                 if (!ModifyItem(itemid, modifychoice, modifydata))
-                    cout << "修改失败" << endl;
+                    cout << "\033[96m修改失败\033[0m" << endl;
                 break;
             }
             case 2: {
                 cout << "请输入新的描述：";
                 getline(cin, modifydata);
                 if (!ModifyItem(itemid, modifychoice, modifydata))
-                    cout << "修改失败" << endl;
+                    cout << "\033[96m修改失败\033[0m" << endl;
                 break;
             }
             default: {
-                cout << "输入错误，请重新输入" << endl;
+                cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
                 break;
             }
             }
@@ -277,7 +277,7 @@ void UserGeneral::SellerView() {
             cout << "请输入需要下架的商品编号：";
             getline(cin, itemid);
             if (sdb_->GetItemSellerid(itemid) != nowuserid_) {
-                cout << "您无权下架该商品" << endl;
+                cout << "\033[96m您无权下架该商品\033[0m" << endl;
                 break;
             }
             PrintSymbolStar(100);
@@ -289,10 +289,10 @@ void UserGeneral::SellerView() {
             getline(cin, input);
             if (input == "y" || input == "Y") {
                 if (!User::OffShelf(itemid))
-                    cout << "下架失败" << endl;
+                    cout << "\033[96m下架失败\033[0m" << endl;
             }
             else {
-                cout << "取消下架商品" << endl;
+                cout << "\033[96m取消下架商品\033[0m" << endl;
             }
             break;
         }
@@ -308,7 +308,7 @@ void UserGeneral::SellerView() {
         case 6:
             return;
         default: {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             break;
         }
         }
@@ -326,7 +326,7 @@ void UserGeneral::UserInfoView() {
         cout << "请输入您的选择：";
         getline(cin, input);
         if (input.length() != 1) {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             continue;
         }
         choice = stoi(input);
@@ -344,7 +344,7 @@ void UserGeneral::UserInfoView() {
             cout << "请输入新的信息：";
             getline(cin, newdata);
             if (!ModifyUserInfo(choice, newdata))
-                cout << "修改失败" << endl;
+                cout << "\033[96m修改失败\033[0m" << endl;
             break;
         }
         case 3: {
@@ -358,7 +358,7 @@ void UserGeneral::UserInfoView() {
         case 4:
             return;
         default: {
-            cout << "输入错误，请重新输入" << endl;
+            cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
             break;
         }
         }
@@ -367,7 +367,7 @@ void UserGeneral::UserInfoView() {
 
 bool UserGeneral::PostItem(const std::string& itemname, const std::string& itemprice, const std::string& itemnumber, const std::string& itemdescription) {
     if (stod(itemprice) <= 0 || stod(itemnumber) <= 0) {
-        cout << "价格或数量不合法" << endl;
+        cout << "\033[96m价格或数量不合法\033[0m" << endl;
         return false;
     }
     string itemdata = "(" + sdb_->GetNewItemid() + "," + itemname + "," + itemprice + "," + itemnumber + "," + itemdescription + "," + this->nowuserid_ + "," + TimeType2() + "," + "销售中" + ")";
@@ -391,7 +391,7 @@ bool UserGeneral::ModifyItem(const std::string& itemid, int modifychoice, const 
         return true;
     }
     default: {
-        cout << "输入错误，请重新输入" << endl;
+        cout << "\033[96m输入错误，请重新输入\033[0m" << endl;
         return false;
     }
     }
@@ -424,7 +424,7 @@ bool UserGeneral::Purchase(const string& itemid, int buynumber) {
     string sellerid    = sdb_->GetItemSellerid(itemid);
     double sellermoney = sdb_->FindUserBalance(sellerid);
     if (!sdb_->ItemNotDown(itemid)) {
-        cout << "商品已下架" << endl;
+        cout << "\033[96m商品已下架\033[0m" << endl;
         return false;
     }
     // item exist
@@ -459,12 +459,12 @@ bool UserGeneral::Purchase(const string& itemid, int buynumber) {
             }
         }
         else {
-            cerr << "库存不足" << endl;
+            cout << "\033[96m库存不足\033[0m" << endl;
             return false;
         }
     }
     else {
-        cerr << "商品不存在" << endl;
+        cout << "\033[96m商品不存在\033[0m" << endl;
         return false;
     }
 }
@@ -472,7 +472,7 @@ bool UserGeneral::Purchase(const string& itemid, int buynumber) {
 bool UserGeneral::ModifyUserInfo(int choice, const string& modifydata) {
     if (choice == 1) {
         if (sdb_->UsernameExist(modifydata)) {
-            cout << "用户名已存在" << endl;
+            cout << "\033[96m用户名已存在\033[0m" << endl;
             return false;
         }
         sdb_->ParseSql("UPDATE user SET username=" + modifydata + " WHERE userID=" + this->nowuserid_);
@@ -481,7 +481,7 @@ bool UserGeneral::ModifyUserInfo(int choice, const string& modifydata) {
     else if (choice == 2) {
         regex phonereg("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$");
         if (!regex_match(modifydata, phonereg)) {
-            cout << "号码格式错误" << endl;
+            cout << "\033[96m号码格式错误\033[0m" << endl;
             return false;
         }
         sdb_->ParseSql("UPDATE user SET phoneNumber=" + modifydata + " WHERE userID=" + this->nowuserid_);
@@ -494,7 +494,7 @@ bool UserGeneral::ModifyUserInfo(int choice, const string& modifydata) {
     else if (choice == 4) {
         regex passwordreg("^[a-zA-Z0-9]{6,16}$");
         if (!regex_match(modifydata, passwordreg)) {
-            cout << "密码格式错误" << endl;
+            cout << "\033[96m密码格式错误\033[0m" << endl;
             return false;
         }
         sdb_->ParseSql("UPDATE user SET password=" + modifydata + " WHERE userID=" + this->nowuserid_);
