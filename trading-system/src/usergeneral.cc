@@ -99,10 +99,22 @@ void UserGeneral::BuyerView() {
             int    buynumber;
             cout << "请输入您要购买的商品ID：";
             getline(cin, itemid);
+            if (nowuserid_ == sdb_->GetItemSellerid(itemid)) {
+                cout << "您不能购买自己的商品" << endl;
+                continue;
+            }
+            if (!sdb_->ItemExist(itemid)) {
+                cout << "商品不存在" << endl;
+                continue;
+            }
             cout << "请输入您要购买的商品数量：";
             string input;
             getline(cin, input);
             buynumber = stoi(input);
+            if (buynumber > sdb_->GetItemNumber(itemid)) {
+                cout << "商品库存不足" << endl;
+                continue;
+            }
             if (!Purchase(itemid, buynumber))
                 cout << "购买失败" << endl;
             break;
@@ -121,11 +133,11 @@ void UserGeneral::BuyerView() {
         }
         case 4: {
             cout << endl;
-            PrintSymbolStar(63);
+            PrintSymbolStar(70);
             // cout << "订单ID  商品ID  交易单价  数量  交易时间  卖家ID  买家ID" << endl;
             PrintOrderTitle();
             BuyerViewOrder();
-            PrintSymbolStar(63);
+            PrintSymbolStar(70);
             break;
         }
         case 5: {
@@ -223,11 +235,11 @@ void UserGeneral::SellerView() {
             string modifydata;
             cout << "请输入需要修改的商品编号：";
             getline(cin, itemid);
-            if(!sdb_->ItemExist(itemid)){
+            if (!sdb_->ItemExist(itemid)) {
                 cout << "商品不存在" << endl;
                 continue;
             }
-            if(nowuserid_ != sdb_->GetItemSellerid(itemid)){
+            if (nowuserid_ != sdb_->GetItemSellerid(itemid)) {
                 cout << "您无权修改该商品" << endl;
                 continue;
             }
@@ -354,6 +366,10 @@ void UserGeneral::UserInfoView() {
 }
 
 bool UserGeneral::PostItem(const std::string& itemname, const std::string& itemprice, const std::string& itemnumber, const std::string& itemdescription) {
+    if (stod(itemprice) <= 0 || stod(itemnumber) <= 0) {
+        cout << "价格或数量不合法" << endl;
+        return false;
+    }
     string itemdata = "(" + sdb_->GetNewItemid() + "," + itemname + "," + itemprice + "," + itemnumber + "," + itemdescription + "," + this->nowuserid_ + "," + TimeType2() + "," + "销售中" + ")";
     sdb_->ParseSql("INSERT INTO commodity VALUES " + itemdata);
     return true;
@@ -397,7 +413,7 @@ void UserGeneral::SearchItem(const string& itemname) {
 }
 
 void UserGeneral::BuyerViewOrder() {
-    sdb_->ParseSql("SELECT * FROM order WHERE buyerID CONTAINS" + this->nowuserid_);
+    sdb_->ParseSql("SELECT * FROM order WHERE buyerID CONTAINS " + this->nowuserid_);
     return;
 }
 

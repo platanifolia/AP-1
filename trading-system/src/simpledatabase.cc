@@ -155,7 +155,7 @@ void SimpleDataBase::InsertUser(const string& insertdata) {
     vector< string > datatoken;
     StringSplit(strtemp, datatoken, ",");
     if (datatoken.size() != 7) {
-        cerr << "Insert data error!" << endl;
+        cerr << "\033[91mInsert data error!\033[0m" << endl;
         return;
     }
     UserInfo userinfotemp{ datatoken[1], datatoken[2], datatoken[3], datatoken[4], stod(datatoken[5]), datatoken[6] };
@@ -170,7 +170,7 @@ void SimpleDataBase::InsertItem(const string& insertdata) {
     vector< string > datatoken;
     StringSplit(strtemp, datatoken, ",");
     if (datatoken.size() != 8) {
-        cerr << "Insert data error!" << endl;
+        cerr << "\033[91mInsert data error!\033[0m" << endl;
         return;
     }
     ItemInfo iteminfotemp{ datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6], datatoken[7] };
@@ -185,7 +185,7 @@ void SimpleDataBase::InsertOrder(const string& insertdata) {
     vector< string > datatoken;
     StringSplit(strtemp, datatoken, ",");
     if (datatoken.size() != 7) {
-        cerr << "Insert data error!" << endl;
+        cerr << "\033[91mInsert data error!\033[0m" << endl;
         return;
     }
     OrderInfo orderinfotemp{ datatoken[1], stod(datatoken[2]), stoi(datatoken[3]), datatoken[4], datatoken[5], datatoken[6] };
@@ -220,7 +220,7 @@ void SimpleDataBase::SelectUser(const std::string& column, const std::string& co
             return;
         }
         else {
-            cerr << "No such user!" << endl;
+            cerr << "\033[91mNo such user!\033[0m" << endl;
             return;
         }
     }
@@ -316,7 +316,7 @@ void SimpleDataBase::SelectUser(const std::string& column, const std::string& co
         return;
     }
     else {
-        cerr << "Select user error!" << endl;
+        cerr << "\033[91mSelect user error!\033[0m" << endl;
         return;
     }
 }
@@ -493,7 +493,7 @@ void SimpleDataBase::SelectItem(const std::string& column, const std::string& co
         return;
     }
     else {
-        cerr << "Select commodity error!" << endl;
+        cerr << "\033[91mSelect commodity error!\033[0m" << endl;
         return;
     }
 }
@@ -525,7 +525,7 @@ void SimpleDataBase::SelectOrder(const std::string& column, const std::string& c
             return;
         }
         else {
-            cerr << "No such order!" << endl;
+            cerr << "\033[91mNo such order!\033[0m" << endl;
             return;
         }
     }
@@ -620,7 +620,7 @@ void SimpleDataBase::SelectOrder(const std::string& column, const std::string& c
         return;
     }
     else {
-        cerr << "Select order error!" << endl;
+        cerr << "\033[91mSelect order error!\033[0m" << endl;
         return;
     }
 }
@@ -631,12 +631,12 @@ bool SimpleDataBase::UpdateUser(const std::string& updatedata, const std::string
     vector< string > conditionvalue;
     StringSplit(condition, conditionvalue, "=");
     if (conditionvalue.size() != 2) {
-        cerr << "Update user condition error!" << endl;
+        cerr << "\033[91mUpdate user condition error!\033[0m" << endl;
         return false;
     }
     // TOFIX: 只是更新condition为userID的情形
     if (conditionvalue[0] != "userID") {
-        cerr << "Update user condition error!" << endl;
+        cerr << "\033[91mUpdate user condition error!\033[0m" << endl;
         return false;
     }
 
@@ -644,11 +644,10 @@ bool SimpleDataBase::UpdateUser(const std::string& updatedata, const std::string
         vector< string > changetemp;
         StringSplit(i, changetemp, "=");
         if (changetemp.size() != 2) {
-            cerr << "Update user data error 01" << endl;
+            cerr << "\033[91mUpdate user data error 01\033[0m" << endl;
             return false;
         }
         if (changetemp[0] == "username") {
-            // TOFIX: 更新username使之不重复
             user_[conditionvalue[1]].username = changetemp[1];
         }
         else if (changetemp[0] == "password") {
@@ -667,7 +666,7 @@ bool SimpleDataBase::UpdateUser(const std::string& updatedata, const std::string
             user_[conditionvalue[1]].userstate = changetemp[1];
         }
         else {
-            cerr << "Update user data error 02" << endl;
+            cerr << "\033[91mUpdate user data error 02\033[0m" << endl;
             return false;
         }
     }
@@ -681,12 +680,12 @@ bool SimpleDataBase::UpdateItem(const std::string& updatedata, const std::string
     vector< string > conditionvalue;
     StringSplit(condition, conditionvalue, "=");
     if (conditionvalue.size() != 2) {
-        cerr << "Update item condition error!" << endl;
+        cerr << "\033[91mUpdate item condition error!\033[0m" << endl;
         return false;
     }
     // TOFIX: 只是更新condition为itemID的情形
     if (conditionvalue[0] != "commodityID") {
-        cerr << "Update item condition error!" << endl;
+        cerr << "\033[91mUpdate item condition error!\033[0m" << endl;
         return false;
     }
 
@@ -694,7 +693,7 @@ bool SimpleDataBase::UpdateItem(const std::string& updatedata, const std::string
         vector< string > changetemp;
         StringSplit(i, changetemp, "=");
         if (changetemp.size() != 2) {
-            cerr << "Update item data error!" << endl;
+            cerr << "\033[91mUpdate item data error!\033[0m" << endl;
             return false;
         }
         if (changetemp[0] == "commodityName") {
@@ -719,7 +718,7 @@ bool SimpleDataBase::UpdateItem(const std::string& updatedata, const std::string
             item_[conditionvalue[1]].state = changetemp[1];
         }
         else {
-            cerr << "Update item data error!" << endl;
+            cerr << "\033[91mUpdate item data error!\033[0m" << endl;
             return false;
         }
     }
@@ -733,12 +732,12 @@ bool SimpleDataBase::UpdateOrder(const std::string& updatedata, const std::strin
     vector< string > conditionvalue;
     StringSplit(condition, conditionvalue, "=");
     if (conditionvalue.size() != 2) {
-        cerr << "Update order condition error!" << endl;
+        cerr << "\033[91mUpdate order condition error!\033[0m" << endl;
         return false;
     }
     // TOFIX: 只是更新condition为orderID的情形
     if (conditionvalue[0] != "orderID") {
-        cerr << "Update order condition error!" << endl;
+        cerr << "\033[91mUpdate order condition error!\033[0m" << endl;
         return false;
     }
 
@@ -746,7 +745,7 @@ bool SimpleDataBase::UpdateOrder(const std::string& updatedata, const std::strin
         vector< string > changetemp;
         StringSplit(i, changetemp, "=");
         if (changetemp.size() != 2) {
-            cerr << "Update order data error!" << endl;
+            cerr << "\033[91mUpdate order data error!\033[0m" << endl;
             return false;
         }
         if (changetemp[0] == "commodityID") {
@@ -768,7 +767,7 @@ bool SimpleDataBase::UpdateOrder(const std::string& updatedata, const std::strin
             order_[conditionvalue[1]].buyerid = changetemp[1];
         }
         else {
-            cerr << "Update order data error!" << endl;
+            cerr << "\033[91mUpdate order data error!\033[0m" << endl;
             return false;
         }
     }
@@ -809,7 +808,7 @@ int SimpleDataBase::ParseSql(const string& sql) {
                 return 6;
             }
             else {
-                cerr << "Select data error!" << endl;
+                cerr << "\033[91mSelect data error!\033[0m" << endl;
                 return 0;
             }
         }
@@ -827,7 +826,7 @@ int SimpleDataBase::ParseSql(const string& sql) {
                 return 6;
             }
             else {
-                cerr << "Select data error!" << endl;
+                cerr << "\033[91mSelect data error!\033[0m" << endl;
                 return 0;
             }
         }
@@ -847,7 +846,7 @@ int SimpleDataBase::ParseSql(const string& sql) {
         }
     }
     else {
-        cerr << "Sql error!" << endl;
+        cerr << "\033[91mSql error!\033[0m" << endl;
         return 0;
     }
     return 0;
@@ -959,7 +958,7 @@ string SimpleDataBase::GetNewOrderid() {
 
 void SimpleDataBase::ViewItemDetail(const string& itemid) {
     if (item_.find(itemid) == item_.end()) {
-        cerr << "Item not found!" << endl;
+        cerr << "\033[91mItem not found!\033[0m" << endl;
         return;
     }
     cout << string(30, '*') << endl;
@@ -974,7 +973,7 @@ void SimpleDataBase::ViewItemDetail(const string& itemid) {
 
 double SimpleDataBase::FindUserBalance(const string& userid) {
     if (user_.find(userid) == user_.end()) {
-        cerr << "User not found!" << endl;
+        cerr << "\033[91mUser not found!\033[0m" << endl;
         return -1;
     }
     return user_[userid].balance;
@@ -982,7 +981,7 @@ double SimpleDataBase::FindUserBalance(const string& userid) {
 
 int SimpleDataBase::GetItemNumber(const string& itemid) {
     if (item_.find(itemid) == item_.end()) {
-        cerr << "Item not found!" << endl;
+        cerr << "\033[91mItem not found!\033[0m" << endl;
         return -1;
     }
     return item_[itemid].number;
@@ -990,7 +989,7 @@ int SimpleDataBase::GetItemNumber(const string& itemid) {
 
 double SimpleDataBase::GetItemPrice(const string& itemid) {
     if (item_.find(itemid) == item_.end()) {
-        cerr << "Item not found!" << endl;
+        cerr << "\033[91mItem not found!\033[0m" << endl;
         return -1;
     }
     return item_[itemid].price;
@@ -998,7 +997,7 @@ double SimpleDataBase::GetItemPrice(const string& itemid) {
 
 string SimpleDataBase::GetItemSellerid(const string& itemid) {
     if (item_.find(itemid) == item_.end()) {
-        cerr << "Item not found!" << endl;
+        cerr << "\033[91mItem not found!\033[0m" << endl;
         return "";
     }
     return item_[itemid].sellerid;
@@ -1006,7 +1005,7 @@ string SimpleDataBase::GetItemSellerid(const string& itemid) {
 
 bool SimpleDataBase::ItemNotDown(const string& itemid) {
     if (item_.find(itemid) == item_.end()) {
-        cerr << "Item not found!" << endl;
+        cerr << "\033[91mItem not found!\033[0m" << endl;
         return false;
     }
     return item_[itemid].state == "销售中";
@@ -1048,6 +1047,8 @@ double SimpleDataBase::CalculateBalance(const string& userid) {
     for (auto& i : link) {
         expression += " + " + to_string(i.first) + " * " + Array2Expr(i.second);
     }
+    if (expression[0] == ' ' && expression[1] == '+')
+        expression.erase(0, 3);
     Evaluator evaluator(expression);
     return evaluator.Calculate();
 }

@@ -68,7 +68,7 @@ double Evaluator::Primary(bool get) {
         double value = Expression(true);
         if (current != TokenType::kRp) {
             // TODO: finish error handling
-            cout << "Error: missing )" << endl;
+            cerr << "\033[91mError: missing )\033[0m" << endl;
         }
         current = TokenGet();
         return value;
@@ -77,7 +77,7 @@ double Evaluator::Primary(bool get) {
         return -Primary(true);
     default:
         // TODO: finish error handling
-        cout << "Error: Some bad" << endl;
+        cerr << "\033[91mError: Some bad\033[0m" << endl;
         return 0;
     }
 }
@@ -95,7 +95,7 @@ double Evaluator::Term(bool get) {
             double divisor = Primary(true);
             if (divisor == 0) {
                 // TODO: finish error handling
-                cout << "Error: Division by zero" << endl;
+                cerr << "\033[91mError: Division by zero\033[0m" << endl;
             }
             value /= divisor;
             break;
