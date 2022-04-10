@@ -422,7 +422,7 @@ void UserGeneral::SearchItem(const string &itemname)
 
 void UserGeneral::BuyerViewOrder()
 {
-    sdb_->ParseSql("SELECT * FROM order WHERE buyerID CONTAINS" + this->nowuserid_);
+    sdb_->ParseSql("SELECT * FROM order WHERE buyerID CONTAINS " + this->nowuserid_);
     return;
 }
 
